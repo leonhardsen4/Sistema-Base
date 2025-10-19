@@ -1,0 +1,20 @@
+# Build outputs
+/target/
+/dist/
+
+# IDE config
+/.idea/
+/.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# Local runtime data
+/database.db
+
+# Local test artifacts
+/note.json

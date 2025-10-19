@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📝 Nova Nota - Sistema</title>
+  <link rel="stylesheet" href="/css/layout.css">
+  <!-- Quill Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nota-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .nota-header {
+      background: white;
+      border-radius: 15px;
+      padding: 20px 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nota-header h1 {
+      font-size: 24px;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    .btn-voltar {
+      background: white;
+      color: #374151;
+      border: 2px solid #e5e7eb;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-voltar:hover {
+      background: #f9fafb;
+      border-color: #d1d5db;
+    }
+
+    .nota-form {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Editor Quill customizado */
+    #editor-container {
+      min-height: 400px;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    #editor-container:focus-within {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .ql-toolbar {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      background: #f9fafb;
+      border: none;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .ql-container {
+      border: none;
+      font-size: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .ql-editor {
+      min-height: 350px;
+      padding: 20px;
+    }
+
+    .ql-editor.ql-blank::before {
+      color: #9ca3af;
+      font-style: normal;
+    }
+
+    /* Preview do status */
+    .status-preview-wrapper {
+      margin-top: 10px;
+    }
+
+    .status-preview {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Botões de ação */
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #f3f4f6;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-cancelar {
+      background: #f3f4f6;
+      color: #374151;
+      border: 2px solid #e5e7eb;
+    }
+
+    .btn-cancelar:hover {
+      background: #e5e7eb;
+    }
+
+    .btn-salvar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-salvar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-salvar:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Alert */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .alert.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .alert.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nota-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="left-tools">
+        <button id="btnSidebarToggle" class="btn-sidebar" aria-label="Alternar menu lateral">☰</button>
+        <h1>🚀 Sistema</h1>
+      </div>
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name" id="userName">Carregando...</div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="menu-lateral">
+        <a href="/dashboard.html"><span class="icon">🏠</span><span class="label">Dashboard</span></a>
+        <a href="/notisblokk.html" class="active"><span class="icon">📋</span><span class="label">Notisblokk</span></a>
+        <a href="/usuarios.html"><span class="icon">👥</span><span class="label">Usuários</span></a>
+      </nav>
+    </aside>
+
+    <main class="container" style="max-width: none; padding: 0;">
+      <div class="nota-container">
+        <div class="nota-header">
+          <h1 id="pageTitulo">📝 Nova Nota</h1>
+          <a href="/notisblokk.html" class="btn-voltar">← Voltar para Notas</a>
+        </div>
+
+        <div class="nota-form">
+          <div id="alert" class="alert"></div>
+
+          <form id="formNota" onsubmit="salvarNota(event)">
+            <input type="hidden" id="notaId">
+
+            <div class="form-group">
+              <label for="notaTitulo">Título da Nota *</label>
+              <input type="text" id="notaTitulo" placeholder="Digite o título da nota..." required autofocus>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="notaEtiqueta">Etiqueta *</label>
+                <select id="notaEtiqueta" required>
+                  <option value="">Selecione uma etiqueta...</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="notaStatus">Status *</label>
+                <select id="notaStatus" required onchange="atualizarPreviewStatus()">
+                  <option value="">Selecione um status...</option>
+                </select>
+                <div class="status-preview-wrapper">
+                  <div class="status-preview" id="statusPreview" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="notaPrazo">Prazo Final *</label>
+              <input type="text" id="notaPrazo" class="datepicker" placeholder="Selecione a data..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="editor-container">Conteúdo da Nota</label>
+              <div id="editor-container"></div>
+            </div>
+
+            <div class="form-actions">
+              <a href="/notisblokk.html" class="btn btn-cancelar">Cancelar</a>
+              <button type="submit" class="btn btn-salvar" id="btnSalvar">Salvar Nota</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let quill;
+
+    // Autenticação
+    window.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('auth_token');
+      if (!token) { window.location.href = '/login.html'; return; }
+
+      const uLocal = localStorage.getItem('usuario');
+      if (uLocal) {
+        try {
+          const u = JSON.parse(uLocal);
+          if (u && u.nome) {
+            document.getElementById('userName').textContent = u.nome;
+            document.getElementById('userEmail').textContent = u.email || '';
+          }
+        } catch {}
+      }
+
+      try {
+        const resp = await fetch('/api/auth/verificar', { headers: { 'Authorization': 'Bearer ' + token } });
+        const json = await resp.json();
+        if (json.sucesso) {
+          document.getElementById('userName').textContent = json.usuario.nome;
+          document.getElementById('userEmail').textContent = json.usuario.email;
+        }
+      } catch {}
+
+      // Inicializar editor Quill
+      quill = new Quill('#editor-container', {
+        theme: 'snow',
+        placeholder: 'Escreva o conteúdo da nota aqui...',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            [{ 'font': [] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'indent': '-1'}, { 'indent': '+1' }],
+            [{ 'align': [] }],
+            ['blockquote', 'code-block'],
+            ['link', 'image', 'video'],
+            ['clean']
+          ]
+        }
+      });
+
+      // Inicializar datepicker
+      flatpickr('#notaPrazo', {
+        locale: 'pt',
+        dateFormat: 'd/m/Y',
+        minDate: 'today'
+      });
+
+      // Carregar dados
+      await carregarEtiquetas();
+      await carregarStatus();
+
+      // Verificar se é edição
+      const params = new URLSearchParams(window.location.search);
+      const notaId = params.get('id');
+      if (notaId) {
+        await carregarNota(notaId);
+      }
+    });
+
+    async function carregarEtiquetas() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const resp = await fetch('/api/etiquetas', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const json = await resp.json();
+
+        const select = document.getElementById('notaEtiqueta');
+        if (json.sucesso && json.dados) {
+          json.dados.forEach(etiqueta => {
+            const option = document.createElement('option');
+            option.value = etiqueta.id;
+            option.textContent = etiqueta.nome;
+            select.appendChild(option);
+          });
+        }
+      } catch (e) {
+        console.error('Erro ao carregar etiquetas:', e);
+      }
+    }
+
+    async function carregarStatus() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const resp = await fetch('/api/status', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const json = await resp.json();
+
+        const select = document.getElementById('notaStatus');
+        if (json.sucesso && json.dados) {
+          json.dados.forEach(status => {
+            const option = document.createElement('option');
+            option.value = status.id;
+            option.textContent = status.nome;
+            option.dataset.cor = status.corHex;
+            select.appendChild(option);
+          });
+        }
+      } catch (e) {
+        console.error('Erro ao carregar status:', e);
+      }
+    }
+
+    async function carregarNota(id) {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const resp = await fetch(`/api/notas/${id}`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const json = await resp.json();
+
+        if (json.sucesso && json.dados) {
+          const nota = json.dados;
+          document.getElementById('pageTitulo').textContent = '✏️ Editar Nota';
+          document.getElementById('notaId').value = nota.id;
+          document.getElementById('notaTitulo').value = nota.titulo;
+          document.getElementById('notaEtiqueta').value = nota.etiquetaId;
+          document.getElementById('notaStatus').value = nota.statusId;
+          document.getElementById('notaPrazo').value = formatarDataParaBR(nota.prazoFinal);
+
+          // Carregar conteúdo no editor
+          if (nota.conteudo) {
+            quill.root.innerHTML = nota.conteudo;
+          }
+
+          atualizarPreviewStatus();
+        }
+      } catch (e) {
+        console.error('Erro ao carregar nota:', e);
+        showError('Erro ao carregar nota para edição');
+      }
+    }
+
+    function formatarDataParaBR(dataISO) {
+      if (!dataISO) return '';
+      const partes = dataISO.split('-');
+      if (partes.length === 3) {
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+      return dataISO;
+    }
+
+    function atualizarPreviewStatus() {
+      const select = document.getElementById('notaStatus');
+      const preview = document.getElementById('statusPreview');
+      const option = select.options[select.selectedIndex];
+
+      if (option && option.value) {
+        const cor = option.dataset.cor || '#667eea';
+        const nome = option.textContent;
+
+        // Calcular cor do texto baseada na luminosidade
+        const r = parseInt(cor.substr(1,2), 16);
+        const g = parseInt(cor.substr(3,2), 16);
+        const b = parseInt(cor.substr(5,2), 16);
+        const luminance = (0.299*r + 0.587*g + 0.114*b);
+        const corTexto = luminance > 186 ? '#111827' : '#ffffff';
+
+        preview.style.backgroundColor = cor;
+        preview.style.color = corTexto;
+        preview.textContent = nome;
+        preview.style.display = 'inline-block';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+
+    async function salvarNota(event) {
+      event.preventDefault();
+
+      const alertBox = document.getElementById('alert');
+      const btnSalvar = document.getElementById('btnSalvar');
+
+      // Limpar alertas
+      alertBox.style.display = 'none';
+      alertBox.className = 'alert';
+
+      // Coletar dados
+      const id = document.getElementById('notaId').value;
+      const titulo = document.getElementById('notaTitulo').value.trim();
+      const etiquetaId = document.getElementById('notaEtiqueta').value;
+      const statusId = document.getElementById('notaStatus').value;
+      const prazo = document.getElementById('notaPrazo').value;
+      const conteudo = quill.root.innerHTML;
+
+      // Validações
+      if (!titulo) {
+        return showError('Informe o título da nota');
+      }
+
+      if (!etiquetaId) {
+        return showError('Selecione uma etiqueta');
+      }
+
+      if (!statusId) {
+        return showError('Selecione um status');
+      }
+
+      if (!prazo) {
+        return showError('Selecione o prazo final');
+      }
+
+      // Converter data para ISO
+      const prazoISO = converterDataParaISO(prazo);
+      if (!prazoISO) {
+        return showError('Data inválida');
+      }
+
+      // Desabilitar botão
+      btnSalvar.disabled = true;
+      btnSalvar.innerHTML = '<span class="loading-spinner"></span> Salvando...';
+
+      try {
+        const token = localStorage.getItem('auth_token');
+        const metodo = id ? 'PUT' : 'POST';
+        const url = id ? `/api/notas/${id}` : '/api/notas';
+
+        const resp = await fetch(url, {
+          method: metodo,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            titulo,
+            etiquetaId: parseInt(etiquetaId),
+            statusId: parseInt(statusId),
+            prazoFinal: prazoISO,
+            conteudo
+          })
+        });
+
+        const json = await resp.json();
+
+        if (json.sucesso) {
+          showSuccess(id ? 'Nota atualizada com sucesso!' : 'Nota criada com sucesso!');
+          setTimeout(() => {
+            window.location.href = '/notisblokk.html';
+          }, 1500);
+        } else {
+          showError(json.mensagem || 'Erro ao salvar nota');
+          btnSalvar.disabled = false;
+          btnSalvar.textContent = 'Salvar Nota';
+        }
+      } catch (e) {
+        showError('Erro ao salvar nota: ' + e.message);
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = 'Salvar Nota';
+      }
+    }
+
+    function converterDataParaISO(dataBR) {
+      const partes = dataBR.split('/');
+      if (partes.length === 3) {
+        return `${partes[2]}-${partes[1]}-${partes[0]}`;
+      }
+      return '';
+    }
+
+    function showError(msg) {
+      const alertBox = document.getElementById('alert');
+      alertBox.className = 'alert error';
+      alertBox.textContent = msg;
+      alertBox.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showSuccess(msg) {
+      const alertBox = document.getElementById('alert');
+      alertBox.className = 'alert success';
+      alertBox.textContent = msg;
+      alertBox.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function logout() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        await fetch('/api/auth/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+      } catch {}
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/login.html';
+    }
+
+    // Toggle da sidebar colapsável
+    (function() {
+      const layout = document.querySelector('.layout');
+      const btn = document.getElementById('btnSidebarToggle');
+      function applyState() {
+        const collapsed = localStorage.getItem('sidebar_collapsed') === '1';
+        if (collapsed) layout.classList.add('collapsed'); else layout.classList.remove('collapsed');
+        if (btn) btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      }
+      window.addEventListener('DOMContentLoaded', applyState);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const collapsed = layout.classList.toggle('collapsed');
+          localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
+          btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

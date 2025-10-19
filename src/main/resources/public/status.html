@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>✅ Status</title>
+  <link rel="stylesheet" href="/css/layout.css" />
+  <style>
+    body { background: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .container { padding: 0; }
+    .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .card-header h2 { font-size: 20px; color: #1f2937; }
+    .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
+    .btn:hover { box-shadow: 0 10px 25px rgba(102, 126, 234, .25); transform: translateY(-1px); }
+    .btn.sec { background: #f9fafb; color: #374151; border: 1px solid #e5e7eb; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    .table th { color: #374151; font-size: 14px; }
+    .table td { color: #111827; font-size: 14px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; font-weight: 600; border: 1px solid #e5e7eb; }
+    .color-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0,0,0,.1); }
+    .actions { display: flex; gap: 8px; }
+    .btn-icone { border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+    .btn-icone:hover { background: #f3f4f6; }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: none; align-items: center; justify-content: center; }
+    .modal-content { background: white; width: 480px; max-width: calc(100% - 32px); border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 15px 35px rgba(0,0,0,.2); }
+    .modal-header { padding: 16px 18px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { margin: 0; font-size: 18px; }
+    .modal-close { border: none; background: transparent; font-size: 22px; cursor: pointer; }
+    .modal-body { padding: 18px; display: grid; gap: 12px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
+    .form-group input[type="text"], .form-group input[type="color"] { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 10px; }
+    .modal-footer { padding: 16px 18px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 10px; }
+    .btn-cancelar { background: #f9fafb; color: #374151; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 14px; cursor: pointer; }
+    .btn-salvar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="left-tools">
+        <button id="btnSidebarToggle" class="btn-sidebar" aria-label="Alternar menu lateral">☰</button>
+        <h1>🚀 Sistema</h1>
+      </div>
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name" id="userName">Carregando...</div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="menu-lateral">
+        <a href="/dashboard.html"><span class="icon">🏠</span><span class="label">Dashboard</span></a>
+        <a href="/notisblokk.html"><span class="icon">📋</span><span class="label">Notisblokk</span></a>
+        <a href="/status.html" class="active"><span class="icon">✅</span><span class="label">Status</span></a>
+        <a href="/usuarios.html"><span class="icon">👥</span><span class="label">Usuários</span></a>
+      </nav>
+    </aside>
+    <main class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2>Gerenciar Status</h2>
+          <button class="btn" onclick="abrirModalNovo()">➕ Novo Status</button>
+        </div>
+        <table class="table" aria-label="Tabela de status">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cor</th>
+              <th>Data Criação</th>
+              <th style="width:160px">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="statusBody">
+            <tr><td colspan="4" style="text-align:center;color:#6b7280;">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Novo/Editar -->
+  <div id="modalStatus" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitulo">Novo Status</h3>
+        <button class="modal-close" onclick="fecharModalStatus()">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="statusId" />
+        <div class="form-group">
+          <label for="statusNome">Nome *</label>
+          <input type="text" id="statusNome" maxlength="100" required />
+        </div>
+        <div class="form-group">
+          <label for="statusCor">Cor *</label>
+          <input type="color" id="statusCor" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" onclick="fecharModalStatus()">Cancelar</button>
+        <button class="btn-salvar" onclick="salvarStatus()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getToken() { return localStorage.getItem('auth_token'); }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const token = getToken();
+      if (!token) { window.location.href = '/login.html'; return; }
+      // Prefetch usuário
+      const uLocal = localStorage.getItem('usuario');
+      if (uLocal) {
+        try { const u = JSON.parse(uLocal); if (u && u.nome) { document.getElementById('userName').textContent = u.nome; document.getElementById('userEmail').textContent = u.email || ''; } } catch {}
+      } else {
+        try {
+          const resp = await fetch('/api/auth/verificar', { headers: { 'Authorization': 'Bearer ' + token } });
+          const json = await resp.json();
+          if (json.sucesso) { document.getElementById('userName').textContent = json.usuario.nome; document.getElementById('userEmail').textContent = json.usuario.email; }
+        } catch {}
+      }
+      carregarStatus();
+    });
+
+    async function carregarStatus() {
+      const body = document.getElementById('statusBody');
+      try {
+        const resp = await fetch('/api/status', { headers: { 'Authorization': 'Bearer ' + getToken() } });
+        const json = await resp.json();
+        const itens = json.dados || [];
+        if (!itens.length) { body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#6b7280;">Nenhum status cadastrado</td></tr>'; return; }
+        body.innerHTML = itens.map(s => {
+          const cor = s.corHex || '#ccc';
+          const txtColor = getCorTexto(cor);
+          return `
+            <tr data-id="${s.id}">
+              <td><span class="badge"><span class="color-dot" style="background:${cor}"></span>${s.nome}</span></td>
+              <td><span style="background:${cor};color:${txtColor};padding:6px 10px;border-radius:8px;border:1px solid #e5e7eb;">${cor}</span></td>
+              <td>${s.dataCriacao || '-'}</td>
+              <td class="actions">
+                <button class="btn-icone" onclick="editarStatus(${s.id}, '${escapeHtml(s.nome)}', '${cor}')">✏️ Editar</button>
+                <button class="btn-icone" onclick="excluirStatus(${s.id})">🗑️ Excluir</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Erro ao carregar status:', e);
+        body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#ef4444;">Erro ao carregar status</td></tr>';
+      }
+    }
+
+    function abrirModalNovo() {
+      document.getElementById('statusId').value = '';
+      document.getElementById('statusNome').value = '';
+      document.getElementById('statusCor').value = '#667eea';
+      document.getElementById('modalTitulo').textContent = 'Novo Status';
+      document.getElementById('modalStatus').style.display = 'flex';
+    }
+
+    function editarStatus(id, nome, cor) {
+      document.getElementById('statusId').value = id;
+      document.getElementById('statusNome').value = unescapeHtml(nome);
+      document.getElementById('statusCor').value = cor || '#667eea';
+      document.getElementById('modalTitulo').textContent = 'Editar Status';
+      document.getElementById('modalStatus').style.display = 'flex';
+    }
+
+    function fecharModalStatus() { document.getElementById('modalStatus').style.display = 'none'; }
+
+    async function salvarStatus() {
+      const id = document.getElementById('statusId').value;
+      const nome = document.getElementById('statusNome').value.trim();
+      const cor = document.getElementById('statusCor').value;
+      if (!nome) { alert('Informe o nome do status'); return; }
+      if (!/^#([A-Fa-f0-9]{6})$/.test(cor)) { alert('Selecione uma cor válida'); return; }
+      const payload = { nome, corHex: cor };
+      try {
+        const opts = {
+          method: id ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
+          body: JSON.stringify(payload)
+        };
+        const url = id ? `/api/status/${id}` : '/api/status';
+        const resp = await fetch(url, opts);
+        const json = await resp.json();
+        if (!resp.ok || !json.sucesso) throw new Error(json.mensagem || 'Falha ao salvar');
+        fecharModalStatus();
+        carregarStatus();
+      } catch (e) {
+        alert('Erro ao salvar: ' + e.message);
+      }
+    }
+
+    async function excluirStatus(id) {
+      const ok = confirm('Excluir este status?');
+      if (!ok) return;
+      try {
+        const resp = await fetch(`/api/status/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + getToken() } });
+        const json = await resp.json();
+        if (!resp.ok || !json.sucesso) throw new Error(json.mensagem || 'Falha ao excluir');
+        carregarStatus();
+      } catch (e) { alert('Erro ao excluir: ' + e.message); }
+    }
+
+    function getCorTexto(bg) {
+      try {
+        const hex = bg.replace('#','');
+        const r = parseInt(hex.substr(0,2),16), g = parseInt(hex.substr(2,2),16), b = parseInt(hex.substr(4,2),16);
+        const luminance = (0.299*r + 0.587*g + 0.114*b);
+        return luminance > 186 ? '#111827' : '#ffffff';
+      } catch(_) { return '#ffffff'; }
+    }
+
+    function escapeHtml(s) { return String(s).replace(/["&'<>]/g, (c) => ({'"':'&quot;','&':'&amp;','\'':'&#39;','<':'&lt;','>':'&gt;'}[c])); }
+    function unescapeHtml(s) { const d = document.createElement('textarea'); d.innerHTML = s; return d.value; }
+
+    async function logout() {
+      try { const token = getToken(); await fetch('/api/auth/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } }); } catch {}
+      localStorage.removeItem('auth_token'); localStorage.removeItem('usuario'); window.location.href = '/login.html';
+    }
+
+    // Toggle da sidebar colapsável
+    (function() {
+      const layout = document.querySelector('.layout');
+      const btn = document.getElementById('btnSidebarToggle');
+      function applyState() {
+        const collapsed = localStorage.getItem('sidebar_collapsed') === '1';
+        if (collapsed) layout.classList.add('collapsed'); else layout.classList.remove('collapsed');
+        if (btn) btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      }
+      window.addEventListener('DOMContentLoaded', applyState);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const collapsed = layout.classList.toggle('collapsed');
+          localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '0');
+          btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

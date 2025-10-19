@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/leonh/TJSP_Gestao_de_Audiencias/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
