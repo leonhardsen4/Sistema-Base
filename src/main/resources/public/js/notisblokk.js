@@ -123,8 +123,8 @@ async function carregarAlertas() {
       const cor = alerta.cor || '#FBBF24';
       const corTexto = alerta.corTexto || idealTextColor(cor);
       const notasHtml = (alerta.notas || []).map(nota => `
-        <div class="alerta-nota" onclick="abrirNota(${nota.id})">
-          <span class="nota-titulo">${nota.titulo}</span>
+        <div class="alerta-nota">
+          <a href="/nota_cadastro.html?id=${nota.id}" class="nota-titulo-link" style="color: ${corTexto};">${nota.titulo}</a>
           <span class="nota-prazo">${nota.prazoFinal || ''}</span>
           ${typeof nota.diasRestantes === 'number' ? `<span class="nota-dias">(${Math.abs(nota.diasRestantes)} dias)</span>` : ''}
         </div>
@@ -135,7 +135,7 @@ async function carregarAlertas() {
         <div class="alerta ${nivelClasse}" style="background: ${cor}; color: ${corTexto};">
           <div class="alerta-header" onclick="toggleAlerta(this); event.stopPropagation();">
             <span>${mensagem}</span>
-            <button class="alerta-toggle" style="color: inherit;">▼</button>
+            <button class="alerta-toggle" style="color: ${corTexto};">▼</button>
           </div>
           <div class="alerta-conteudo" style="display:none;">${notasHtml || '<div class="vazio">Sem notas neste alerta.</div>'}</div>
         </div>

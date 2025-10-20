@@ -30,10 +30,13 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-
 .alerta-header { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding: 10px 12px; }
 .alerta-icone { font-size: 18px; }
 .alerta-texto { font-weight: 600; }
-.alerta-toggle { border: none; background: transparent; color: inherit; cursor: pointer; }
+.alerta-toggle { border: none; background: transparent; color: inherit; cursor: pointer; padding: 4px 8px; transition: opacity 0.2s; }
+.alerta-toggle:hover { opacity: 0.7; }
 .alerta-conteudo { padding: 10px 12px; border-top: 1px solid rgba(0,0,0,0.1); }
 .alerta-nota { padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.2); margin-bottom: 6px; }
 .alerta-nota:hover { background: rgba(255,255,255,0.3); }
+.nota-titulo-link { text-decoration: none; font-weight: 600; transition: opacity 0.2s; }
+.nota-titulo-link:hover { text-decoration: underline; opacity: 0.8; }
 
 /* Níveis de alerta (cores) */
 .alerta.critico { background: #000000; color: #DC2626; border-color: #DC2626; }
