@@ -88,6 +88,7 @@
       font-size: 15px;
       font-family: inherit;
       transition: all 0.3s ease;
+      box-sizing: border-box;
     }
 
     .form-group input:focus,
@@ -250,6 +251,8 @@
             <div id="alert" class="alert"></div>
 
             <form id="formUsuario">
+              <input type="hidden" id="usuarioId">
+
               <div class="form-group">
                 <label for="nome">Nome Completo *</label>
                 <input type="text" id="nome" placeholder="João Silva" required autofocus>
@@ -375,58 +378,71 @@
       alertBox.textContent = '';
 
       // Coletar dados
+      const usuarioId = document.getElementById('usuarioId').value;
       const nome = document.getElementById('nome').value.trim();
       const email = document.getElementById('email').value.trim();
       const telefone = document.getElementById('telefone').value.trim();
       const senha = document.getElementById('senha').value;
       const confirmar = document.getElementById('confirmarSenha').value;
 
+      const isEdicao = !!usuarioId;
+
       // Validações
-      if (!nome || !email || !senha) {
+      if (!nome || !email) {
         return showError('Preencha todos os campos obrigatórios.');
       }
 
-      if (senha.length < 6) {
+      // Senha obrigatória apenas na criação
+      if (!isEdicao && !senha) {
+        return showError('Preencha a senha.');
+      }
+
+      if (senha && senha.length < 6) {
         return showError('A senha deve ter ao menos 6 caracteres.');
       }
 
-      if (senha !== confirmar) {
+      if (senha && senha !== confirmar) {
         return showError('As senhas não conferem.');
       }
 
       // Desabilitar botão e mostrar loading
       btnSalvar.disabled = true;
-      btnSalvar.innerHTML = '<span class="loading-spinner"></span> Criando...';
+      btnSalvar.innerHTML = isEdicao
+        ? '<span class="loading-spinner"></span> Salvando...'
+        : '<span class="loading-spinner"></span> Criando...';
 
       try {
         const token = await verificar();
         if (!token) return;
 
-        const resp = await fetch('/api/usuarios', {
-          method: 'POST',
+        const body = { nome, email, telefone };
+        if (senha) body.senha = senha; // Só envia senha se foi informada
+
+        const resp = await fetch(isEdicao ? `/api/usuarios/${usuarioId}` : '/api/usuarios', {
+          method: isEdicao ? 'PUT' : 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
           },
-          body: JSON.stringify({ nome, email, telefone, senha })
+          body: JSON.stringify(body)
         });
 
         const json = await resp.json();
 
         if (resp.ok && json.sucesso) {
-          showSuccess(json.mensagem || 'Usuário criado com sucesso!');
+          showSuccess(json.mensagem || (isEdicao ? 'Usuário atualizado com sucesso!' : 'Usuário criado com sucesso!'));
           setTimeout(() => {
             window.location.href = '/usuarios.html';
           }, 1500);
         } else {
-          showError(json.mensagem || 'Erro ao criar usuário');
+          showError(json.mensagem || (isEdicao ? 'Erro ao atualizar usuário' : 'Erro ao criar usuário'));
           btnSalvar.disabled = false;
-          btnSalvar.textContent = 'Criar Usuário';
+          btnSalvar.textContent = isEdicao ? 'Salvar Alterações' : 'Criar Usuário';
         }
       } catch (err) {
         showError('Falha na solicitação: ' + (err?.message || err));
         btnSalvar.disabled = false;
-        btnSalvar.textContent = 'Criar Usuário';
+        btnSalvar.textContent = isEdicao ? 'Salvar Alterações' : 'Criar Usuário';
       }
     });
 
@@ -454,7 +470,52 @@
       window.location.href = '/login.html';
     }
 
-    window.addEventListener('DOMContentLoaded', verificar);
+    // Carregar dados do usuário se for edição
+    async function carregarUsuario() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (id) {
+        // Modo de edição
+        document.querySelector('.form-header h1').textContent = '✏️ Editar Usuário';
+        document.querySelector('.form-header p').textContent = 'Altere os dados do usuário abaixo';
+        document.getElementById('btnSalvar').textContent = 'Salvar Alterações';
+
+        // Campos de senha não obrigatórios na edição
+        document.getElementById('senha').required = false;
+        document.getElementById('confirmarSenha').required = false;
+        document.getElementById('senha').placeholder = 'Deixe em branco para não alterar';
+        document.getElementById('confirmarSenha').placeholder = 'Deixe em branco para não alterar';
+
+        try {
+          const token = await verificar();
+          if (!token) return;
+
+          const resp = await fetch(`/api/usuarios/${id}`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+
+          const json = await resp.json();
+
+          if (resp.ok && json.sucesso) {
+            const usuario = json.dados;
+            document.getElementById('usuarioId').value = usuario.id;
+            document.getElementById('nome').value = usuario.nome || '';
+            document.getElementById('email').value = usuario.email || '';
+            document.getElementById('telefone').value = usuario.telefone || '';
+          } else {
+            showError(json.mensagem || 'Erro ao carregar usuário');
+          }
+        } catch (err) {
+          showError('Erro ao carregar usuário: ' + (err?.message || err));
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      verificar();
+      carregarUsuario();
+    });
 
     // Toggle da sidebar colapsável
     (function() {

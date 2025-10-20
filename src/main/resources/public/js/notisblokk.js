@@ -97,6 +97,9 @@ let ordenacaoAtual = { coluna: null, direcao: 'asc' };
 // ===== Alertas =====
 async function carregarAlertas() {
   const container = document.getElementById('alertasContainer');
+  const section = document.getElementById('alertasSection');
+  const countEl = document.getElementById('alertasCount');
+
   try {
     const response = await fetch(api.alertas, {
       headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -104,10 +107,17 @@ async function carregarAlertas() {
     const data = await response.json();
     const alertas = Array.isArray(data) ? data : (data.sucesso ? (data.dados || []) : []);
 
+    // Se não houver alertas, colapsar a seção
     if (!alertas.length) {
-      container.innerHTML = '<div class="sem-alertas">✅ Tudo em dia!</div>';
+      container.innerHTML = '<div style="text-align: center; padding: 15px; color: #10b981; font-size: 14px;">✅ Tudo em dia!</div>';
+      section.classList.remove('expanded');
+      if (countEl) countEl.textContent = '';
       return;
     }
+
+    // Se houver alertas, expandir a seção
+    section.classList.add('expanded');
+    if (countEl) countEl.textContent = `(${alertas.length})`;
 
     container.innerHTML = alertas.map(alerta => {
       const cor = alerta.cor || '#FBBF24';
@@ -123,9 +133,9 @@ async function carregarAlertas() {
       const mensagem = alerta.mensagem || `${alerta.nivel || 'AVISO'}`;
       return `
         <div class="alerta ${nivelClasse}" style="background: ${cor}; color: ${corTexto};">
-          <div class="alerta-header" onclick="toggleAlerta(this)">
+          <div class="alerta-header" onclick="toggleAlerta(this); event.stopPropagation();">
             <span>${mensagem}</span>
-            <button class="alerta-toggle">▼</button>
+            <button class="alerta-toggle" style="color: inherit;">▼</button>
           </div>
           <div class="alerta-conteudo" style="display:none;">${notasHtml || '<div class="vazio">Sem notas neste alerta.</div>'}</div>
         </div>
@@ -134,7 +144,18 @@ async function carregarAlertas() {
   } catch (error) {
     console.error('Erro ao carregar alertas:', error);
     container.innerHTML = '<div class="vazio">Não foi possível carregar alertas.</div>';
+    section.classList.remove('expanded');
   }
+}
+
+// Função auxiliar para ideal text color (se não existir)
+function idealTextColor(bgColor) {
+  const hex = bgColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155 ? '#000000' : '#FFFFFF';
 }
 
 function toggleAlerta(headerEl) {
@@ -306,7 +327,7 @@ async function carregarNotas(etiquetaId = null) {
     const notas = Array.isArray(data) ? data : (data.dados || []);
 
     if (!notas.length) {
-      tbody.innerHTML = '<tr><td colspan="8" class="texto-centralizado">Nenhuma nota encontrada</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="texto-centralizado">Nenhuma nota encontrada</td></tr>';
       atualizarBarraAcoes();
       return;
     }
@@ -318,7 +339,6 @@ async function carregarNotas(etiquetaId = null) {
 
       return `
         <tr data-id="${nota.id}">
-          <td><input type="checkbox" class="nota-checkbox" value="${nota.id}"></td>
           <td class="nota-titulo col-titulo" onclick="abrirNota(${nota.id})">${nota.titulo || 'Sem título'}</td>
           <td class="col-etiqueta"><span class="badge badge-etiqueta">${nota.etiquetaNome || '-'}</span></td>
           <td class="col-status">
@@ -338,7 +358,7 @@ async function carregarNotas(etiquetaId = null) {
     }).join('');
   } catch (error) {
     console.error('Erro ao carregar notas:', error);
-    if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="texto-centralizado">Erro ao carregar notas</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="texto-centralizado">Erro ao carregar notas</td></tr>';
   }
 }
 
@@ -379,9 +399,11 @@ function filtrarNotas(texto) {
 
   let encontrados = 0;
   linhas.forEach(linha => {
-    const titulo = (linha.cells[1]?.textContent || '').toLowerCase();
-    const etiqueta = (linha.cells[2]?.textContent || '').toLowerCase();
-    const status = (linha.cells[3]?.textContent || '').toLowerCase();
+    if (linha.cells.length <= 1) return; // Linha de carregamento/vazia
+
+    const titulo = (linha.cells[0]?.textContent || '').toLowerCase(); // Coluna 0: Título
+    const etiqueta = (linha.cells[1]?.textContent || '').toLowerCase(); // Coluna 1: Etiqueta
+    const status = (linha.cells[2]?.textContent || '').toLowerCase(); // Coluna 2: Status
 
     const encontrado = titulo.includes(busca) || etiqueta.includes(busca) || status.includes(busca);
     linha.style.display = encontrado ? '' : 'none';

@@ -17,21 +17,14 @@
       padding: 0;
     }
 
-    /* Layout principal - 2 colunas */
+    /* Layout principal - Single column */
     .notisblokk-layout {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 20px;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Sidebar esquerda completa */
-    .sidebar-left {
       display: flex;
       flex-direction: column;
       gap: 20px;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
     }
 
     .card {
@@ -54,46 +47,73 @@
       margin: 0;
     }
 
-    /* Etiquetas */
-    .etiquetas-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 350px;
-      overflow-y: auto;
+    /* Etiquetas - Seção horizontal */
+    .etiquetas-section {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .etiqueta-item {
+    .etiquetas-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .etiquetas-section-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #1f2937;
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
+    }
+
+    .etiquetas-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .etiquetas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .etiqueta-card {
+      padding: 10px 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
-    .etiqueta-item:hover {
-      background: #f9fafb;
+    .etiqueta-card:hover {
       border-color: #667eea;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.15);
+      transform: translateY(-1px);
     }
 
-    .etiqueta-item.selected {
-      background: #eef2ff;
-      border-color: #667eea;
-    }
-
-    .etiqueta-checkbox {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .etiqueta-nome {
-      flex: 1;
-      font-weight: 500;
+    .etiqueta-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-size: 13px;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .etiqueta-info strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .etiqueta-contador {
@@ -101,7 +121,15 @@
       color: #6b7280;
       background: #f3f4f6;
       padding: 2px 6px;
-      border-radius: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .etiqueta-acoes {
+      display: flex;
+      gap: 2px;
+      flex-shrink: 0;
     }
 
     .btn-icone-small {
@@ -118,11 +146,57 @@
       opacity: 1;
     }
 
-    /* Alertas */
+    /* Alertas - Seção colapsável no topo */
+    .alertas-section {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .alertas-section.collapsed {
+      display: none;
+    }
+
+    .alertas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #fef3c7;
+      border-bottom: 2px solid #fbbf24;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .alertas-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alertas-toggle-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #92400e;
+      transition: transform 0.3s;
+    }
+
+    .alertas-section.expanded .alertas-toggle-btn {
+      transform: rotate(180deg);
+    }
+
     .alertas-container {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      padding: 15px 20px;
       max-height: 300px;
       overflow-y: auto;
     }
@@ -175,18 +249,95 @@
 
     .toolbar {
       display: flex;
-      gap: 15px;
+      gap: 10px;
       align-items: center;
       background: white;
       padding: 15px;
       border-radius: 15px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .btn-filter, .btn-sort {
+      background: #f3f4f6;
+      color: #374151;
+      border: 2px solid #e5e7eb;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-filter:hover, .btn-sort:hover {
+      background: #e5e7eb;
+      border-color: #667eea;
+    }
+
+    .btn-filter.active, .btn-sort.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .filter-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .filter-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 5px;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      padding: 10px;
+      min-width: 200px;
+      z-index: 1000;
+    }
+
+    .filter-menu.show {
+      display: block;
+    }
+
+    .filter-option {
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+
+    .filter-option:hover {
+      background: #f3f4f6;
+    }
+
+    .filter-option.active {
+      background: #eef2ff;
+      color: #667eea;
+      font-weight: 600;
     }
 
     .search-box {
       flex: 1;
       max-width: 600px;
       position: relative;
+      min-width: 0;
     }
 
     .search-box input {
@@ -196,6 +347,7 @@
       border-radius: 10px;
       font-size: 14px;
       transition: all 0.3s ease;
+      box-sizing: border-box;
     }
 
     .search-box input:focus {
@@ -228,41 +380,65 @@
       font-size: 13px;
     }
 
-    /* Tabela de notas - mais largura */
+    /* Tabela de notas - responsiva */
     .notas-table-container {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
       overflow-x: auto;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .notas-table-wrapper {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .notas-table-container table {
+      width: 100%;
+      min-width: 900px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
     }
 
     thead {
-      background: #f9fafb;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
     th {
-      padding: 12px;
+      padding: 14px 12px;
       text-align: left;
       font-weight: 600;
-      color: #374151;
-      font-size: 14px;
-      border-bottom: 2px solid #e5e7eb;
+      color: #ffffff;
+      font-size: 13px;
+      border-bottom: none;
+      white-space: nowrap;
     }
 
     td {
       padding: 12px;
       border-bottom: 1px solid #f3f4f6;
-      font-size: 14px;
+      font-size: 13px;
       color: #1f2937;
+      vertical-align: middle;
     }
 
-    tr:hover {
+    /* Larguras específicas das colunas - tabela de notas */
+    #tabelaNotas th:nth-child(1), #tabelaNotas td:nth-child(1) { width: 28%; } /* Título */
+    #tabelaNotas th:nth-child(2), #tabelaNotas td:nth-child(2) { width: 12%; } /* Etiqueta */
+    #tabelaNotas th:nth-child(3), #tabelaNotas td:nth-child(3) { width: 12%; } /* Status */
+    #tabelaNotas th:nth-child(4), #tabelaNotas td:nth-child(4) { width: 11%; } /* Prazo */
+    #tabelaNotas th:nth-child(5), #tabelaNotas td:nth-child(5) { width: 11%; } /* Data Criação */
+    #tabelaNotas th:nth-child(6), #tabelaNotas td:nth-child(6) { width: 11%; } /* Data Atualização */
+    #tabelaNotas th:nth-child(7), #tabelaNotas td:nth-child(7) { width: 15%; text-align: center; } /* Ações */
+
+    tbody tr:hover {
       background: #f9fafb;
     }
 
@@ -501,34 +677,45 @@
       display: block;
     }
 
-    /* Status gerenciamento */
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 12px;
-      margin-top: 15px;
+    /* Status gerenciamento - Tabela */
+    .status-table-container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow-x: auto;
+      width: 100%;
     }
 
-    .status-card {
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .status-table th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 14px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 13px;
+      border-bottom: none;
+    }
+
+    .status-table td {
       padding: 12px;
-      border: 2px solid #e5e7eb;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.2s;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
+      color: #1f2937;
+      vertical-align: middle;
     }
 
-    .status-card:hover {
-      border-color: #667eea;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+    .status-table tbody tr:hover {
+      background: #f9fafb;
     }
 
-    .status-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
+    .status-table td:last-child {
+      text-align: center;
     }
 
     .color-dot {
@@ -536,26 +723,22 @@
       height: 18px;
       border-radius: 50%;
       border: 2px solid rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+
+    /* Prevenir overflow horizontal */
+    .container {
+      overflow-x: hidden;
     }
 
     /* Responsivo */
     @media (max-width: 1200px) {
-      .notisblokk-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar-left {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
+      .etiquetas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       }
     }
 
     @media (max-width: 768px) {
-      .sidebar-left {
-        grid-template-columns: 1fr;
-      }
-
       .toolbar {
         flex-direction: column;
         align-items: stretch;
@@ -565,9 +748,62 @@
         max-width: none;
       }
 
-      .status-grid {
+      .etiquetas-grid {
         grid-template-columns: 1fr;
       }
+
+      .tabs {
+        gap: 0;
+        overflow-x: auto;
+      }
+
+      .tab {
+        padding: 10px 15px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .etiquetas-section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .etiquetas-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .etiquetas-controls input {
+        width: 100% !important;
+      }
+    }
+
+    /* Melhorias visuais adicionais */
+    .notas-table-container {
+      min-height: 400px;
+    }
+
+    table {
+      font-size: 14px;
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .nota-titulo {
+      cursor: pointer;
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    .nota-titulo:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -599,55 +835,88 @@
 
     <main class="container" style="padding: 0; max-width: none;">
       <div class="notisblokk-layout">
-        <!-- Sidebar esquerda: Etiquetas e Alertas -->
-        <div class="sidebar-left">
-          <!-- Etiquetas -->
-          <div class="card">
-            <div class="card-header">
-              <h3>🏷️ Etiquetas</h3>
-              <button class="btn-small" onclick="modalNovaEtiqueta()" title="Nova Etiqueta">➕</button>
-            </div>
-            <input type="text" id="buscaEtiquetas" placeholder="🔍 Buscar..."
-                   style="width: 100%; padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box;"
-                   oninput="filtrarEtiquetas(this.value)">
-            <div class="etiquetas-list" id="listaEtiquetas">
-              <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 13px;">
-                Carregando...
-              </div>
-            </div>
-          </div>
 
-          <!-- Alertas -->
-          <div class="card">
-            <div class="card-header">
-              <h3>🔔 Alertas</h3>
-            </div>
-            <div class="alertas-container" id="alertasContainer">
-              <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 13px;">
-                Carregando...
-              </div>
+        <!-- 1. Alertas no topo (colapsável) -->
+        <div class="alertas-section expanded" id="alertasSection">
+          <div class="alertas-header" onclick="toggleAlertasSection()">
+            <h3><span>🔔</span> Alertas <span id="alertasCount" style="font-size: 12px; opacity: 0.8;"></span></h3>
+            <button class="alertas-toggle-btn">▼</button>
+          </div>
+          <div class="alertas-container" id="alertasContainer">
+            <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 13px;">
+              Carregando...
             </div>
           </div>
         </div>
 
-        <!-- Painel principal: Tabs (Notas / Status) -->
-        <div class="main-panel">
-          <div class="card" style="padding: 0;">
-            <div class="tabs" style="padding: 0 20px; padding-top: 20px; margin-bottom: 0;">
-              <button class="tab active" onclick="switchTab('notas')">📋 Notas</button>
-              <button class="tab" onclick="switchTab('status')">✅ Status</button>
+        <!-- 2. Etiquetas (horizontal) -->
+        <div class="etiquetas-section">
+          <div class="etiquetas-section-header">
+            <h3><span>🏷️</span> Etiquetas</h3>
+            <div class="etiquetas-controls">
+              <input type="text" id="buscaEtiquetas" placeholder="🔍 Buscar..."
+                     style="padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 13px; width: 200px;">
+              <button class="btn btn-small" onclick="modalNovaEtiqueta()">➕ Nova</button>
             </div>
+          </div>
+          <div class="etiquetas-grid" id="etiquetasGrid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #6b7280;">
+              Carregando...
+            </div>
+          </div>
+        </div>
 
-            <!-- Tab: Notas -->
-            <div id="tabNotas" class="tab-content active" style="padding: 20px;">
-              <div class="toolbar">
-                <div class="search-box">
-                  <input type="text" id="buscaNotas" placeholder="🔍 Buscar notas..." oninput="filtrarNotas(this.value)">
-                </div>
-                <a href="/nota_cadastro.html" class="btn">➕ Nova Nota</a>
+        <!-- 3. Tabs: Notas e Status -->
+        <div class="card" style="padding: 0;">
+          <div class="tabs" style="padding: 0 20px; padding-top: 20px; margin-bottom: 0;">
+            <button class="tab active" onclick="switchTab('notas')">📋 Notas</button>
+            <button class="tab" onclick="switchTab('status')">✅ Status</button>
+          </div>
+
+          <!-- Tab: Notas -->
+          <div id="tabNotas" class="tab-content active" style="padding: 20px;">
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="buscaNotas" placeholder="🔍 Buscar notas..." oninput="filtrarNotas(this.value)">
               </div>
 
-              <div class="notas-table-container">
+              <div class="toolbar-actions">
+                <!-- Botão de Ordenar -->
+                <div class="filter-dropdown">
+                  <button class="btn-sort" onclick="toggleSortMenu()">
+                    <span>⇅</span> Ordenar
+                  </button>
+                  <div class="filter-menu" id="sortMenu">
+                    <div class="filter-option" onclick="ordenarPor('titulo', 'asc')">Título (A-Z)</div>
+                    <div class="filter-option" onclick="ordenarPor('titulo', 'desc')">Título (Z-A)</div>
+                    <div class="filter-option" onclick="ordenarPor('prazo', 'asc')">Prazo (Mais próximo)</div>
+                    <div class="filter-option" onclick="ordenarPor('prazo', 'desc')">Prazo (Mais distante)</div>
+                    <div class="filter-option" onclick="ordenarPor('criacao', 'desc')">Mais recentes</div>
+                    <div class="filter-option" onclick="ordenarPor('criacao', 'asc')">Mais antigas</div>
+                  </div>
+                </div>
+
+                <!-- Botão de Filtrar -->
+                <div class="filter-dropdown">
+                  <button class="btn-filter" onclick="toggleFilterMenu()">
+                    <span>🔍</span> Filtrar
+                  </button>
+                  <div class="filter-menu" id="filterMenu">
+                    <div class="filter-option active" onclick="filtrarPorStatus('todos')">📋 Todas</div>
+                    <div style="border-top: 1px solid #e5e7eb; margin: 8px 0;"></div>
+                    <div class="filter-option" onclick="filtrarPorPrazo('atrasadas')">🔴 Atrasadas</div>
+                    <div class="filter-option" onclick="filtrarPorPrazo('urgentes')">🟠 Urgentes (1-2 dias)</div>
+                    <div class="filter-option" onclick="filtrarPorPrazo('proximas')">🟡 Próximas (3-5 dias)</div>
+                    <div class="filter-option" onclick="filtrarPorPrazo('normais')">🟢 Normais (6+ dias)</div>
+                  </div>
+                </div>
+
+                <a href="/nota_cadastro.html" class="btn">➕ Nova Nota</a>
+              </div>
+            </div>
+
+            <div class="notas-table-container" style="margin-top: 15px;">
+              <div class="notas-table-wrapper">
                 <table id="tabelaNotas">
                   <thead>
                     <tr>
@@ -656,30 +925,41 @@
                       <th>Status</th>
                       <th>Prazo</th>
                       <th>Data Criação</th>
-                      <th style="width: 140px;">Ações</th>
+                      <th>Data Atualização</th>
+                      <th>Ações</th>
                     </tr>
                   </thead>
                   <tbody id="corpoTabela">
-                    <tr><td colspan="6" style="text-align: center; padding: 40px; color: #6b7280;">Carregando notas...</td></tr>
+                    <tr><td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">Carregando notas...</td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
+          </div>
 
-            <!-- Tab: Status -->
-            <div id="tabStatus" class="tab-content" style="padding: 20px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; font-size: 18px;">Gerenciar Status</h3>
-                <button class="btn" onclick="modalNovoStatus()">➕ Novo Status</button>
-              </div>
-              <div class="status-grid" id="statusGrid">
-                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280;">
-                  Carregando...
-                </div>
-              </div>
+          <!-- Tab: Status -->
+          <div id="tabStatus" class="tab-content" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3 style="margin: 0; font-size: 18px;">Gerenciar Status</h3>
+              <button class="btn" onclick="modalNovoStatus()">➕ Novo Status</button>
+            </div>
+            <div class="status-table-container">
+              <table class="status-table" id="statusTable">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">Cor</th>
+                    <th>Nome</th>
+                    <th style="width: 150px;">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="statusTableBody">
+                  <tr><td colspan="3" style="text-align: center; padding: 40px; color: #6b7280;">Carregando...</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
+
       </div>
     </main>
   </div>
@@ -790,6 +1070,12 @@
       }
     })();
 
+    // Toggle alertas
+    function toggleAlertasSection() {
+      const section = document.getElementById('alertasSection');
+      section.classList.toggle('expanded');
+    }
+
     // Tabs
     function switchTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -801,8 +1087,169 @@
       } else if (tab === 'status') {
         document.querySelector('.tab:nth-child(2)').classList.add('active');
         document.getElementById('tabStatus').classList.add('active');
-        carregarStatusParaGestao();
+        carregarStatusParaTabela();
       }
+    }
+
+    // Carregar etiquetas na seção horizontal
+    async function carregarEtiquetasParaGestao() {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const resp = await fetch('/api/etiquetas', { headers: { 'Authorization': 'Bearer ' + token } });
+        const json = await resp.json();
+        const grid = document.getElementById('etiquetasGrid');
+
+        if (json.sucesso && json.dados.length > 0) {
+          grid.innerHTML = json.dados.map(et => `
+            <div class="etiqueta-card">
+              <div class="etiqueta-info">
+                <span>🏷️</span>
+                <strong>${et.nome}</strong>
+                <span class="etiqueta-contador">${et.contador || 0}</span>
+              </div>
+              <div class="etiqueta-acoes">
+                <button class="btn-icone-small" onclick="editarEtiqueta(${et.id}, '${et.nome.replace(/'/g, "\\'")}'); event.stopPropagation();" title="Editar">✏️</button>
+                <button class="btn-icone-small" onclick="excluirEtiqueta(${et.id}); event.stopPropagation();" title="Excluir">🗑️</button>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 20px;">Nenhuma etiqueta cadastrada.</div>';
+        }
+      } catch (e) {
+        console.error('Erro ao carregar etiquetas:', e);
+      }
+    }
+
+    // Filtrar etiquetas no grid
+    function filtrarEtiquetasGrid(term) {
+      const cards = document.querySelectorAll('.etiqueta-card');
+      const busca = (term || '').toLowerCase();
+      cards.forEach(card => {
+        const texto = card.textContent.toLowerCase();
+        card.style.display = texto.includes(busca) ? 'flex' : 'none';
+      });
+    }
+
+    // Event listener para busca de etiquetas
+    document.addEventListener('DOMContentLoaded', () => {
+      const buscaEtiquetas = document.getElementById('buscaEtiquetas');
+      if (buscaEtiquetas) {
+        buscaEtiquetas.addEventListener('input', (e) => filtrarEtiquetasGrid(e.target.value));
+      }
+      carregarEtiquetasParaGestao();
+
+      // Fechar menus ao clicar fora
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.filter-dropdown')) {
+          document.querySelectorAll('.filter-menu').forEach(menu => menu.classList.remove('show'));
+        }
+      });
+    });
+
+    // Toggle menus de filtro e ordenação
+    function toggleSortMenu() {
+      const menu = document.getElementById('sortMenu');
+      const filterMenu = document.getElementById('filterMenu');
+      menu.classList.toggle('show');
+      filterMenu.classList.remove('show');
+      event.stopPropagation();
+    }
+
+    function toggleFilterMenu() {
+      const menu = document.getElementById('filterMenu');
+      const sortMenu = document.getElementById('sortMenu');
+      menu.classList.toggle('show');
+      sortMenu.classList.remove('show');
+      event.stopPropagation();
+    }
+
+    // Ordenar tabela
+    function ordenarPor(campo, direcao) {
+      const tbody = document.getElementById('corpoTabela');
+      const linhas = Array.from(tbody.querySelectorAll('tr'));
+
+      // Atualizar visual do menu
+      document.querySelectorAll('#sortMenu .filter-option').forEach(opt => opt.classList.remove('active'));
+      event.target.classList.add('active');
+
+      linhas.sort((a, b) => {
+        let valorA, valorB;
+
+        if (campo === 'titulo') {
+          valorA = a.cells[0]?.textContent.trim().toLowerCase() || ''; // Coluna 0: Título
+          valorB = b.cells[0]?.textContent.trim().toLowerCase() || '';
+        } else if (campo === 'prazo') {
+          valorA = converterDataBRParaComparacao(a.cells[3]?.textContent.trim() || ''); // Coluna 3: Prazo
+          valorB = converterDataBRParaComparacao(b.cells[3]?.textContent.trim() || '');
+        } else if (campo === 'criacao') {
+          valorA = converterDataBRParaComparacao(a.cells[4]?.textContent.trim() || ''); // Coluna 4: Data Criação
+          valorB = converterDataBRParaComparacao(b.cells[4]?.textContent.trim() || '');
+        }
+
+        if (direcao === 'asc') {
+          return valorA > valorB ? 1 : -1;
+        } else {
+          return valorA < valorB ? 1 : -1;
+        }
+      });
+
+      linhas.forEach(linha => tbody.appendChild(linha));
+      document.getElementById('sortMenu').classList.remove('show');
+    }
+
+    function converterDataBRParaComparacao(dataStr) {
+      const match = dataStr.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      if (!match) return '';
+      return `${match[3]}-${match[2]}-${match[1]}`;
+    }
+
+    // Filtrar por prazo
+    function filtrarPorPrazo(tipo) {
+      const linhas = document.querySelectorAll('#corpoTabela tr');
+
+      // Atualizar visual do menu
+      document.querySelectorAll('#filterMenu .filter-option').forEach(opt => opt.classList.remove('active'));
+      event.target.classList.add('active');
+
+      linhas.forEach(linha => {
+        if (linha.cells.length <= 1) return; // Linha de carregamento/vazia
+
+        const prazoCell = linha.cells[3]; // Coluna 3: Prazo
+        const classePrazo = prazoCell?.className || '';
+
+        let mostrar = false;
+
+        if (tipo === 'todos') {
+          mostrar = true;
+        } else if (tipo === 'atrasadas') {
+          mostrar = classePrazo.includes('prazo-atrasado');
+        } else if (tipo === 'urgentes') {
+          mostrar = classePrazo.includes('prazo-urgente');
+        } else if (tipo === 'proximas') {
+          mostrar = classePrazo.includes('prazo-atencao') || classePrazo.includes('prazo-aviso');
+        } else if (tipo === 'normais') {
+          mostrar = classePrazo.includes('prazo-normal');
+        }
+
+        linha.style.display = mostrar ? '' : 'none';
+      });
+
+      document.getElementById('filterMenu').classList.remove('show');
+    }
+
+    function filtrarPorStatus(tipo) {
+      const linhas = document.querySelectorAll('#corpoTabela tr');
+
+      // Atualizar visual do menu
+      document.querySelectorAll('#filterMenu .filter-option').forEach(opt => opt.classList.remove('active'));
+      event.target.classList.add('active');
+
+      linhas.forEach(linha => {
+        linha.style.display = '';
+      });
+
+      document.getElementById('filterMenu').classList.remove('show');
     }
 
     // Modais
@@ -847,33 +1294,37 @@
       document.getElementById(modalId).classList.remove('show');
     }
 
-    // Carregar status para gestão
-    async function carregarStatusParaGestao() {
+    // Carregar status como tabela
+    async function carregarStatusParaTabela() {
       try {
         const token = localStorage.getItem('auth_token');
         const resp = await fetch('/api/status', { headers: { 'Authorization': 'Bearer ' + token } });
         const json = await resp.json();
-        const grid = document.getElementById('statusGrid');
+        const tbody = document.getElementById('statusTableBody');
 
         if (json.sucesso && json.dados.length > 0) {
-          grid.innerHTML = json.dados.map(s => `
-            <div class="status-card">
-              <div class="status-info">
-                <span class="color-dot" style="background: ${s.corHex}"></span>
-                <strong>${s.nome}</strong>
-              </div>
-              <div style="display: flex; gap: 4px;">
-                <button class="btn-icone-small" onclick="editarStatus(${s.id}, '${s.nome.replace(/'/g, "\\'")}', '${s.corHex}')" title="Editar">✏️</button>
-                <button class="btn-icone-small" onclick="excluirStatus(${s.id})" title="Excluir">🗑️</button>
-              </div>
-            </div>
+          tbody.innerHTML = json.dados.map(s => `
+            <tr>
+              <td><span class="color-dot" style="background: ${s.corHex}"></span></td>
+              <td><strong>${s.nome}</strong></td>
+              <td>
+                <button class="btn-table" onclick="editarStatus(${s.id}, '${s.nome.replace(/'/g, "\\'")}', '${s.corHex}')" title="Editar">✏️ Editar</button>
+                <button class="btn-table" onclick="excluirStatus(${s.id})" title="Excluir">🗑️ Excluir</button>
+              </td>
+            </tr>
           `).join('');
         } else {
-          grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 40px;">Nenhum status cadastrado.</div>';
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6b7280; padding: 40px;">Nenhum status cadastrado.</td></tr>';
         }
       } catch (e) {
         console.error('Erro ao carregar status:', e);
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ef4444; padding: 40px;">Erro ao carregar status.</td></tr>';
       }
+    }
+
+    // Função antiga mantida para compatibilidade
+    async function carregarStatusParaGestao() {
+      await carregarStatusParaTabela();
     }
 
     function editarStatus(id, nome, cor) {
@@ -913,7 +1364,7 @@
 
         if (json.sucesso) {
           fecharModal('modalStatus');
-          carregarStatusParaGestao();
+          carregarStatusParaTabela();
           if (window.carregarStatus) window.carregarStatus();
         } else {
           alert(json.mensagem || 'Erro ao salvar status');
@@ -935,7 +1386,7 @@
         const json = await resp.json();
 
         if (json.sucesso) {
-          carregarStatusParaGestao();
+          carregarStatusParaTabela();
           if (window.carregarStatus) window.carregarStatus();
         } else {
           alert(json.mensagem || 'Erro ao excluir status');
@@ -972,6 +1423,7 @@
 
         if (json.sucesso) {
           fecharModal('modalEtiqueta');
+          carregarEtiquetasParaGestao();
           if (window.carregarEtiquetas) window.carregarEtiquetas();
         } else {
           alert(json.mensagem || 'Erro ao salvar etiqueta');
@@ -993,6 +1445,7 @@
         const json = await resp.json();
 
         if (json.sucesso) {
+          carregarEtiquetasParaGestao();
           if (window.carregarEtiquetas) window.carregarEtiquetas();
           if (window.carregarNotas) window.carregarNotas();
         } else {
@@ -1003,5 +1456,6 @@
       }
     }
   </script>
+  <script src="/js/notisblokk.js"></script>
 </body>
 </html>
