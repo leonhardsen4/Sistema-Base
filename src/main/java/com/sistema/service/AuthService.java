@@ -15,27 +15,27 @@ public class AuthService {
     }
     
     // Login - retorna token e dados do usuário
-    public Optional<Map<String, Object>> login(String email, String senha) throws SQLException {
-        // Autenticar usuário
+    public Optional<Map<String, Object>> login(String email, String senha) throws SQLException, IllegalArgumentException {
+        // Autenticar usuário (pode lançar IllegalArgumentException se usuário inativo)
         var usuarioOpt = usuarioService.autenticar(email, senha);
-        
+
         if (usuarioOpt.isEmpty()) {
             return Optional.empty();
         }
-        
+
         var usuario = usuarioOpt.get();
-        
+
         // Gerar token único
         var token = gerarToken();
-        
+
         // Salvar sessão no banco
         salvarSessao(usuario.getId(), token);
-        
+
         // Retornar dados
         var dados = new HashMap<String, Object>();
         dados.put("token", token);
         dados.put("usuario", new UsuarioDTO(usuario));
-        
+
         return Optional.of(dados);
     }
     

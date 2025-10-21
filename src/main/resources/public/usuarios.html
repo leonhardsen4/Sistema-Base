@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>👥 Usuários - Sistema</title>
+  <title>Usuários - Sistema</title>
   <link rel="stylesheet" href="/css/layout.css">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f3f4f6;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
       margin: 0;
       padding: 0;
     }
 
     .painel {
-      background: white;
-      border-radius: 15px;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
       padding: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .painel-header {
@@ -29,8 +30,9 @@
 
     .painel-header h2 {
       font-size: 24px;
-      color: #1f2937;
+      color: var(--text-primary);
       margin: 0;
+      font-weight: 700;
     }
 
     .toolbar {
@@ -50,20 +52,26 @@
     .search-box input {
       width: 100%;
       padding: 12px 15px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--input-border);
       border-radius: 10px;
       font-size: 14px;
       transition: all 0.3s ease;
+      background: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    .search-box input::placeholder {
+      color: var(--input-placeholder);
     }
 
     .search-box input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     .btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-primary);
       color: white;
       border: none;
       padding: 12px 20px;
@@ -77,8 +85,9 @@
     }
 
     .btn:hover {
+      background: var(--gradient-primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 25px rgba(153, 23, 60, 0.3);
     }
 
     table {
@@ -87,23 +96,23 @@
     }
 
     thead {
-      background: #f9fafb;
+      background: var(--gradient-header);
     }
 
     th {
       padding: 14px 16px;
       text-align: left;
       font-weight: 600;
-      color: #374151;
+      color: white;
       font-size: 14px;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: none;
     }
 
     td {
       padding: 14px 16px;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid var(--color-border-light);
       font-size: 14px;
-      color: #1f2937;
+      color: var(--text-primary);
     }
 
     tbody tr {
@@ -111,7 +120,7 @@
     }
 
     tbody tr:hover {
-      background: #f9fafb;
+      background: var(--color-primary-light);
     }
 
     .status-badge {
@@ -135,14 +144,14 @@
     .vazio {
       padding: 60px 20px;
       text-align: center;
-      color: #6b7280;
+      color: var(--text-secondary);
       font-size: 16px;
     }
 
     .loading {
       padding: 60px 20px;
       text-align: center;
-      color: #6b7280;
+      color: var(--text-secondary);
     }
 
     /* Avatar inicial */
@@ -150,7 +159,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-primary);
       color: white;
       display: inline-flex;
       align-items: center;
@@ -170,42 +179,90 @@
       flex-direction: column;
     }
 
-    .user-name {
+    .user-details .user-name {
       font-weight: 600;
-      color: #1f2937;
+      color: var(--text-primary);
       margin-bottom: 2px;
     }
 
-    .user-email {
+    .user-details .user-email {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--text-secondary);
     }
 
-    .btn-action {
-      background: #f3f4f6;
+    .btn-table {
+      background: none;
       border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
       cursor: pointer;
-      font-size: 12px;
-      margin: 0 2px;
-      transition: all 0.2s;
-      color: #374151;
-      font-weight: 500;
+      font-size: 14px;
+      padding: 4px 8px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      color: var(--text-secondary);
     }
 
-    .btn-action:hover {
-      background: #e5e7eb;
+    .btn-table:hover {
+      opacity: 1;
+      color: var(--text-primary);
     }
 
-    .btn-action.btn-edit:hover {
-      background: #dbeafe;
-      color: #1e40af;
+    /* Toggle switch para ativo/inativo */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+      cursor: pointer;
+      user-select: none;
     }
 
-    .btn-action.btn-deactivate:hover {
-      background: #fee2e2;
-      color: #991b1b;
+    .toggle-switch input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--gradient-primary);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    .toggle-switch:hover .toggle-slider {
+      opacity: 0.9;
+    }
+
+    .toggle-switch input:disabled + .toggle-slider {
+      cursor: pointer;
+      opacity: 1;
     }
 
     @media (max-width: 768px) {
@@ -239,9 +296,13 @@
     <div class="header-content">
       <div class="left-tools">
         <button id="btnSidebarToggle" class="btn-sidebar" aria-label="Alternar menu lateral">☰</button>
-        <h1>🚀 Sistema</h1>
+        <h1>Sistema</h1>
       </div>
       <div class="user-menu">
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-option active" data-theme="light">☼</div>
+          <div class="theme-toggle-option" data-theme="dark">☾</div>
+        </div>
         <div class="user-info">
           <div class="user-name" id="userName">Carregando...</div>
           <div class="user-email" id="userEmail"></div>
@@ -263,14 +324,14 @@
     <main class="container" style="max-width: none; padding: 0;">
       <div class="painel">
         <div class="painel-header">
-          <h2>👥 Gerenciar Usuários</h2>
+          <h2>Gerenciar Usuários</h2>
         </div>
 
         <div class="toolbar">
           <div class="search-box">
             <input id="busca" type="text" placeholder="🔍 Buscar usuários por nome ou email..." oninput="filtrarUsuarios(this.value)">
           </div>
-          <a href="/usuarios_cadastro.html" class="btn">➕ Novo Usuário</a>
+          <a href="/usuarios_cadastro.html" class="btn">+ Novo Usuário</a>
         </div>
 
         <div class="tabela-wrapper">
@@ -379,7 +440,6 @@
         const tr = document.createElement('tr');
         const statusClass = u.ativo ? 'ativo' : 'inativo';
         const statusText = u.ativo ? 'Ativo' : 'Inativo';
-        const acaoTexto = u.ativo ? 'Desativar' : 'Ativar';
 
         tr.innerHTML = `
           <td>
@@ -394,11 +454,12 @@
           <td>${u.telefone || '-'}</td>
           <td><span class="status-badge ${statusClass}">${statusText}</span></td>
           <td>${formatarData(u.dataCriacao)}</td>
-          <td>
-            <button class="btn-action btn-edit" onclick="editarUsuario(${u.id})" title="Editar">✏️ Editar</button>
-            <button class="btn-action btn-deactivate" onclick="toggleUsuario(${u.id}, ${u.ativo})" title="${acaoTexto}">
-              ${u.ativo ? '🚫' : '✅'} ${acaoTexto}
-            </button>
+          <td style="display: flex; align-items: center; gap: 10px;">
+            <button class="btn-table" onclick="editarUsuario(${u.id})" title="Editar">✎</button>
+            <div class="toggle-switch" onclick="handleToggleClick(${u.id}, ${u.ativo})" title="${u.ativo ? 'Desativar usuário' : 'Ativar usuário'}">
+              <input type="checkbox" ${u.ativo ? 'checked' : ''} disabled>
+              <span class="toggle-slider"></span>
+            </div>
           </td>
         `;
         corpo.appendChild(tr);
@@ -418,12 +479,24 @@
       window.location.href = `/usuarios_cadastro.html?id=${id}`;
     }
 
-    async function toggleUsuario(id, ativo) {
-      const acao = ativo ? 'desativar' : 'ativar';
-      if (!confirm(`Deseja realmente ${acao} este usuário?`)) return;
+    // Interceptar clique no toggle para confirmar antes de mudar
+    function handleToggleClick(id, statusAtual) {
+      const novoStatus = !statusAtual;
+      const acao = novoStatus ? 'ativar' : 'desativar';
 
+      if (!confirm(`Deseja realmente ${acao} este usuário?`)) {
+        // Usuário cancelou, não faz nada
+        return;
+      }
+
+      // Usuário confirmou, executar toggle
+      toggleUsuario(id, novoStatus);
+    }
+
+    async function toggleUsuario(id, novoStatus) {
       try {
         const token = localStorage.getItem('auth_token');
+
         // Buscar usuário atual
         const resp = await fetch(`/api/usuarios/${id}`, {
           headers: { 'Authorization': 'Bearer ' + token }
@@ -436,30 +509,46 @@
         }
 
         const usuario = json.dados;
-        // Atualizar com status invertido
+
+        console.log('Estado atual do usuário:', usuario.ativo);
+        console.log('Novo status a ser enviado:', novoStatus);
+
+        // Atualizar com novo status
+        const payload = {
+          nome: usuario.nome,
+          email: usuario.email,
+          telefone: usuario.telefone,
+          ativo: novoStatus
+        };
+
+        console.log('Payload sendo enviado:', payload);
+
         const updateResp = await fetch(`/api/usuarios/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
           },
-          body: JSON.stringify({
-            nome: usuario.nome,
-            email: usuario.email,
-            telefone: usuario.telefone,
-            ativo: !ativo
-          })
+          body: JSON.stringify(payload)
         });
 
         const updateJson = await updateResp.json();
+        console.log('Resposta do servidor:', updateJson);
+
         if (updateJson.sucesso) {
-          alert(`Usuário ${acao === 'desativar' ? 'desativado' : 'ativado'} com sucesso!`);
-          carregarUsuarios();
+          const acao = novoStatus ? 'ativado' : 'desativado';
+          alert(`Usuário ${acao} com sucesso!`);
+
+          // Aguardar um pouco antes de recarregar para dar tempo do banco atualizar
+          setTimeout(() => {
+            carregarUsuarios();
+          }, 300);
         } else {
-          alert(updateJson.mensagem || `Erro ao ${acao} usuário`);
+          alert(updateJson.mensagem || 'Erro ao atualizar usuário');
         }
       } catch (e) {
         alert('Erro ao processar solicitação: ' + e.message);
+        console.error('Erro completo:', e);
       }
     }
 
@@ -473,7 +562,40 @@
       window.location.href = '/login.html';
     }
 
-    window.addEventListener('DOMContentLoaded', carregarUsuarios);
+    // Toggle de tema
+    function initThemeToggle() {
+      const toggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'light';
+
+      // Aplicar tema salvo
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggleUI(savedTheme);
+
+      // Event listener para toggle
+      toggle.querySelectorAll('.theme-toggle-option').forEach(option => {
+        option.addEventListener('click', () => {
+          const theme = option.dataset.theme;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+          updateThemeToggleUI(theme);
+        });
+      });
+    }
+
+    function updateThemeToggleUI(theme) {
+      document.querySelectorAll('.theme-toggle-option').forEach(option => {
+        if (option.dataset.theme === theme) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initThemeToggle();
+      carregarUsuarios();
+    });
 
     // Toggle da sidebar colapsável
     (function() {

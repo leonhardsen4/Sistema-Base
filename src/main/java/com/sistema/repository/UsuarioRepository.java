@@ -10,19 +10,19 @@ import java.util.Optional;
 
 public class UsuarioRepository {
     
-    // Buscar todos os usuários
+    // Buscar todos os usuários (incluindo inativos)
     public List<Usuario> buscarTodos() throws SQLException {
         var usuarios = new ArrayList<Usuario>();
-        
+
         try (var conn = DatabaseConfig.getConnection();
-             var stmt = conn.prepareStatement("SELECT * FROM usuarios WHERE ativo = 1 ORDER BY nome")) {
-            
+             var stmt = conn.prepareStatement("SELECT * FROM usuarios ORDER BY nome")) {
+
             var rs = stmt.executeQuery();
             while (rs.next()) {
                 usuarios.add(mapearResultSet(rs));
             }
         }
-        
+
         return usuarios;
     }
     
@@ -85,13 +85,15 @@ public class UsuarioRepository {
     public boolean atualizar(Usuario usuario) throws SQLException {
         try (var conn = DatabaseConfig.getConnection();
              var stmt = conn.prepareStatement(
-                 "UPDATE usuarios SET nome = ?, email = ?, telefone = ? WHERE id = ?")) {
-            
+                 "UPDATE usuarios SET nome = ?, email = ?, telefone = ?, senha_hash = ?, ativo = ? WHERE id = ?")) {
+
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getTelefone());
-            stmt.setLong(4, usuario.getId());
-            
+            stmt.setString(4, usuario.getSenhaHash());
+            stmt.setInt(5, usuario.isAtivo() ? 1 : 0);
+            stmt.setLong(6, usuario.getId());
+
             return stmt.executeUpdate() > 0;
         }
     }

@@ -1,16 +1,104 @@
-/* Navegação principal no header (agora removida das páginas) */
-.menu-principal { display: none; }
+/* ========================================
+   VARIÁVEIS CSS - TEMA CLARO
+   ======================================== */
+:root {
+  /* Paleta principal */
+  --color-primary: #99173C;
+  --color-bg-light: #EFFFCD;
+  --color-bg-sections: #DCE9BE;
+  --color-gray: #555152;
+  --color-dark: #2E2633;
 
-/* Header compartilhado (gradiente e menu do usuário) */
+  /* Variações */
+  --color-primary-hover: #7d1230;
+  --color-primary-light: rgba(153, 23, 60, 0.1);
+  --color-border: #D4DDB4;
+  --color-border-light: #E8F0D0;
+
+  /* Gradientes */
+  --gradient-primary: linear-gradient(135deg, #99173C 0%, #c71f4f 50%, #99173C 100%);
+  --gradient-primary-hover: linear-gradient(135deg, #7d1230 0%, #99173C 50%, #7d1230 100%);
+  --gradient-header: linear-gradient(135deg, #99173C 0%, #b01d46 100%);
+  --gradient-login-bg: linear-gradient(135deg, #99173C 0%, #c71f4f 50%, #7d1230 100%);
+
+  /* Texto */
+  --text-primary: var(--color-dark);
+  --text-secondary: var(--color-gray);
+  --text-light: #6b7280;
+  --text-white: #ffffff;
+
+  /* Inputs e formulários */
+  --input-bg: #ffffff;
+  --input-text: var(--color-dark);
+  --input-border: var(--color-border);
+  --input-placeholder: #9ca3af;
+
+  /* Status e alertas */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #DC2626;
+  --color-info: #3b82f6;
+}
+
+/* ========================================
+   VARIÁVEIS CSS - TEMA ESCURO
+   ======================================== */
+[data-theme="dark"] {
+  /* Paleta principal */
+  --color-primary: #C7254E;
+  --color-bg-light: #1a1a1a;
+  --color-bg-sections: #2a2a2a;
+  --color-gray: #9ca3af;
+  --color-dark: #e5e7eb;
+
+  /* Variações */
+  --color-primary-hover: #e02d5a;
+  --color-primary-light: rgba(199, 37, 78, 0.2);
+  --color-border: #3a3a3a;
+  --color-border-light: #2f2f2f;
+
+  /* Texto */
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-light: #6b7280;
+  --text-white: #ffffff;
+
+  /* Inputs e formulários */
+  --input-bg: #1f1f1f;
+  --input-text: #e5e7eb;
+  --input-border: #3a3a3a;
+  --input-placeholder: #6b7280;
+}
+
+/* ========================================
+   RESET E BASE
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--color-bg-light);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================
+   HEADER COMPARTILHADO
+   ======================================== */
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-header);
+  color: var(--text-white);
   height: 64px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
   z-index: 100;
 }
+
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
@@ -20,30 +108,88 @@
   height: 100%;
   padding: 0 30px;
 }
-.header h1 { font-size: 20px; margin: 0; font-weight: 700; }
-.user-menu { display: flex; align-items: center; gap: 20px; }
-.user-info { text-align: right; }
-.user-name { font-weight: 600; font-size: 14px; }
-.user-email { font-size: 12px; opacity: 0.9; }
+
+.header h1 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ícone do sistema */
+.header h1::before {
+  content: "🚀";
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+/* Toggle e título à esquerda */
+.left-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-sidebar {
+  background: rgba(255,255,255,0.15);
+  color: var(--text-white);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-sidebar:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* Menu do usuário */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info {
+  text-align: right;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-email {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
 .btn-logout {
-  background: rgba(255,255,255,0.2);
-  color: white;
-  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: var(--text-white);
+  border: 1px solid rgba(255,255,255,0.25);
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
-.btn-logout:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
 
-/* Botão de toggle e título à esquerda */
-.left-tools { display: flex; align-items: center; gap: 12px; }
-.btn-sidebar { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.3); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; }
-.btn-sidebar:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+.btn-logout:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.4);
+}
 
-/* Layout com menu lateral permanente */
+/* ========================================
+   LAYOUT COM SIDEBAR
+   ======================================== */
 .layout {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -55,8 +201,8 @@
 }
 
 .sidebar {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--color-bg-sections);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 16px;
   height: fit-content;
@@ -75,32 +221,36 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #374151;
+  color: var(--text-secondary);
   text-decoration: none;
   padding: 10px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
   transition: all 0.2s ease;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .menu-lateral a:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--text-primary);
 }
 
 .menu-lateral a.active {
-  background: #eef2ff;
-  border-color: #c7d2fe;
-  color: #1f2937;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-white);
   font-weight: 600;
 }
 
+/* Ícones minimalistas no menu */
 .menu-lateral a .icon {
   width: 24px;
   display: inline-flex;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .menu-lateral a .label {
@@ -113,25 +263,81 @@
   padding: 0;
 }
 
-/* Modo colapsado da sidebar */
-.layout.collapsed { grid-template-columns: 72px 1fr; }
-.layout.collapsed .sidebar { padding: 8px; }
-.layout.collapsed .menu-lateral a { justify-content: center; }
-.layout.collapsed .menu-lateral a .label { display: none; }
+/* ========================================
+   SIDEBAR COLAPSÁVEL
+   ======================================== */
+.layout.collapsed {
+  grid-template-columns: 72px 1fr;
+}
 
+.layout.collapsed .sidebar {
+  padding: 8px;
+}
+
+.layout.collapsed .menu-lateral a {
+  justify-content: center;
+}
+
+.layout.collapsed .menu-lateral a .label {
+  display: none;
+}
+
+/* ========================================
+   TOGGLE DE TEMA
+   ======================================== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.theme-toggle-option {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  color: rgba(255,255,255,0.7);
+}
+
+.theme-toggle-option.active {
+  background: var(--text-white);
+  color: var(--color-primary);
+}
+
+/* ========================================
+   RESPONSIVO
+   ======================================== */
 @media (max-width: 768px) {
   .layout {
     grid-template-columns: 1fr;
     padding: 16px;
     gap: 16px;
   }
+
   .sidebar {
     display: none;
   }
+
   .header-content {
     padding: 0 16px;
   }
+
   .user-info {
+    display: none;
+  }
+
+  .theme-toggle {
     display: none;
   }
 }

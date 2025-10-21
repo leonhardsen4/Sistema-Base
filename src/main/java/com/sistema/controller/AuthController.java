@@ -17,15 +17,15 @@ public class AuthController {
     public void login(Context ctx) {
         try {
             var body = ctx.bodyAsClass(LoginRequest.class);
-            
+
             var resultado = authService.login(body.email, body.senha);
-            
+
             if (resultado.isPresent()) {
                 var dados = resultado.get();
-                
+
                 // Adicionar token no cookie (opcional)
                 ctx.cookie("auth_token", dados.get("token").toString(), 86400); // 24 horas
-                
+
                 ctx.json(Map.of(
                     "sucesso", true,
                     "mensagem", "Login realizado com sucesso",
@@ -37,7 +37,13 @@ public class AuthController {
                     "mensagem", "Email ou senha incorretos"
                 ));
             }
-            
+
+        } catch (IllegalArgumentException e) {
+            // Exceção específica para usuário inativo
+            ctx.status(403).json(Map.of(
+                "sucesso", false,
+                "mensagem", e.getMessage()
+            ));
         } catch (Exception e) {
             ctx.status(500).json(Map.of(
                 "sucesso", false,

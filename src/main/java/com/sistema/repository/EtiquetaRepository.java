@@ -58,6 +58,37 @@ public class EtiquetaRepository {
         }
     }
 
+    /**
+     * Conta quantas notas estão associadas a uma etiqueta específica
+     */
+    public int contarNotasPorEtiqueta(Long etiquetaId) throws SQLException {
+        try (var conn = DatabaseConfig.getConnection();
+             var stmt = conn.prepareStatement("SELECT COUNT(*) as total FROM notas WHERE etiqueta_id = ?")) {
+            stmt.setLong(1, etiquetaId);
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Retorna um mapa com o contador de notas para cada etiqueta
+     */
+    public Map<Long, Integer> contarNotasPorTodasEtiquetas() throws SQLException {
+        Map<Long, Integer> contadores = new HashMap<>();
+        try (var conn = DatabaseConfig.getConnection();
+             var stmt = conn.prepareStatement(
+                     "SELECT etiqueta_id, COUNT(*) as total FROM notas GROUP BY etiqueta_id")) {
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                contadores.put(rs.getLong("etiqueta_id"), rs.getInt("total"));
+            }
+        }
+        return contadores;
+    }
+
     private Etiqueta mapear(ResultSet rs) throws SQLException {
         var e = new Etiqueta();
         e.setId(rs.getLong("id"));

@@ -51,37 +51,162 @@ public class UsuarioService {
         return new UsuarioDTO(usuarioSalvo);
     }
     
-    // Atualizar usuário
+    // Atualizar usuário (sem senha)
     public Optional<UsuarioDTO> atualizar(Long id, String nome, String email, String telefone) throws SQLException {
         var usuarioOpt = repository.buscarPorId(id);
-        
+
         if (usuarioOpt.isEmpty()) {
             return Optional.empty();
         }
-        
+
         var usuario = usuarioOpt.get();
-        
+
         // Validar dados
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome é obrigatório");
         }
-        
+
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Email inválido");
         }
-        
+
         // Verificar se email já existe em outro usuário
         var usuarioPorEmail = repository.buscarPorEmail(email);
         if (usuarioPorEmail.isPresent() && !usuarioPorEmail.get().getId().equals(id)) {
             throw new IllegalArgumentException("Email já cadastrado por outro usuário");
         }
-        
+
         usuario.setNome(nome);
         usuario.setEmail(email);
         usuario.setTelefone(telefone);
-        
+
         repository.atualizar(usuario);
-        
+
+        return Optional.of(new UsuarioDTO(usuario));
+    }
+
+    // Atualizar usuário com nova senha (sem exigir senha atual)
+    public Optional<UsuarioDTO> atualizarComSenha(Long id, String nome, String email, String telefone, String novaSenha) throws SQLException {
+        var usuarioOpt = repository.buscarPorId(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var usuario = usuarioOpt.get();
+
+        // Validar dados
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Email inválido");
+        }
+
+        // Validar senha
+        if (novaSenha == null || novaSenha.length() < 6) {
+            throw new IllegalArgumentException("Senha deve ter no mínimo 6 caracteres");
+        }
+
+        // Verificar se email já existe em outro usuário
+        var usuarioPorEmail = repository.buscarPorEmail(email);
+        if (usuarioPorEmail.isPresent() && !usuarioPorEmail.get().getId().equals(id)) {
+            throw new IllegalArgumentException("Email já cadastrado por outro usuário");
+        }
+
+        // Atualizar dados básicos
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+        usuario.setTelefone(telefone);
+
+        // Hash da nova senha
+        var novaSenhaHash = BCrypt.withDefaults().hashToString(12, novaSenha.toCharArray());
+        usuario.setSenhaHash(novaSenhaHash);
+
+        repository.atualizar(usuario);
+
+        return Optional.of(new UsuarioDTO(usuario));
+    }
+
+    // Atualizar usuário com status ativo/inativo
+    public Optional<UsuarioDTO> atualizarComStatus(Long id, String nome, String email, String telefone, boolean ativo) throws SQLException {
+        var usuarioOpt = repository.buscarPorId(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var usuario = usuarioOpt.get();
+
+        // Validar dados
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Email inválido");
+        }
+
+        // Verificar se email já existe em outro usuário
+        var usuarioPorEmail = repository.buscarPorEmail(email);
+        if (usuarioPorEmail.isPresent() && !usuarioPorEmail.get().getId().equals(id)) {
+            throw new IllegalArgumentException("Email já cadastrado por outro usuário");
+        }
+
+        // Atualizar dados
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+        usuario.setTelefone(telefone);
+        usuario.setAtivo(ativo);
+
+        repository.atualizar(usuario);
+
+        return Optional.of(new UsuarioDTO(usuario));
+    }
+
+    // Atualizar usuário completo (dados + senha + status)
+    public Optional<UsuarioDTO> atualizarCompleto(Long id, String nome, String email, String telefone, String novaSenha, boolean ativo) throws SQLException {
+        var usuarioOpt = repository.buscarPorId(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var usuario = usuarioOpt.get();
+
+        // Validar dados
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Email inválido");
+        }
+
+        // Validar senha
+        if (novaSenha == null || novaSenha.length() < 6) {
+            throw new IllegalArgumentException("Senha deve ter no mínimo 6 caracteres");
+        }
+
+        // Verificar se email já existe em outro usuário
+        var usuarioPorEmail = repository.buscarPorEmail(email);
+        if (usuarioPorEmail.isPresent() && !usuarioPorEmail.get().getId().equals(id)) {
+            throw new IllegalArgumentException("Email já cadastrado por outro usuário");
+        }
+
+        // Atualizar dados
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+        usuario.setTelefone(telefone);
+        usuario.setAtivo(ativo);
+
+        // Hash da nova senha
+        var novaSenhaHash = BCrypt.withDefaults().hashToString(12, novaSenha.toCharArray());
+        usuario.setSenhaHash(novaSenhaHash);
+
+        repository.atualizar(usuario);
+
         return Optional.of(new UsuarioDTO(usuario));
     }
     
@@ -122,27 +247,27 @@ public class UsuarioService {
     // Autenticar usuário (retorna usuario se senha correta)
     public Optional<Usuario> autenticar(String email, String senha) throws SQLException {
         var usuarioOpt = repository.buscarPorEmail(email);
-        
+
         if (usuarioOpt.isEmpty()) {
             return Optional.empty();
         }
-        
+
         var usuario = usuarioOpt.get();
-        
-        // Verificar se usuário está ativo
-        if (!usuario.isAtivo()) {
-            return Optional.empty();
-        }
-        
-        // Verificar senha
+
+        // Verificar senha primeiro
         var verificador = BCrypt.verifyer();
         var resultado = verificador.verify(senha.toCharArray(), usuario.getSenhaHash());
-        
-        if (resultado.verified) {
-            return Optional.of(usuario);
+
+        if (!resultado.verified) {
+            return Optional.empty();
         }
-        
-        return Optional.empty();
+
+        // Senha correta, agora verifica se usuário está ativo
+        if (!usuario.isAtivo()) {
+            throw new IllegalArgumentException("Usuário desativado. Entre em contato com o administrador do sistema.");
+        }
+
+        return Optional.of(usuario);
     }
     
     // Validações

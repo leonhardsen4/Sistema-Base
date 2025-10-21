@@ -1,7 +1,36 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/Users/leonh/TJSP_Gestao_de_Audiencias/**)"
+      "Bash(cmd /c \"if exist \"\"C:\\Program Files\\Apache\\Maven\"\" dir \"\"C:\\Program Files\\Apache\\Maven\"\" /s /b | findstr mvn.cmd\")",
+      "Bash(jar -uf target/sistema-base.jar -C src/main/resources public/nota_cadastro.html)",
+      "Bash(cmd /c \"taskkill /F /PID 18992\")",
+      "Bash(jar -uf target/sistema-base.jar -C src/main/resources public/dashboard.html public/js/notisblokk.js public/css/notisblokk.css)",
+      "Bash(jar -uf target/sistema-base.jar -C src/main/resources public/dashboard.html)",
+      "Bash(jar -uf target/sistema-base.jar -C src/main/resources public/js/notisblokk.js)",
+      "Bash(jar -uf target/sistema-base.jar -C src/main/resources public/css/notisblokk.css)",
+      "Bash(curl -s http://localhost:7070/css/notisblokk.css)",
+      "Bash(curl -s http://localhost:7070/dashboard.html)",
+      "Bash(cmd /c \"taskkill /F /PID 13048\")",
+      "Bash(cmd /c \"taskkill /F /IM java.exe\")",
+      "Bash(git add src/main/resources/public/css/layout.css src/main/resources/public/css/notisblokk.css src/main/resources/public/dashboard.html src/main/resources/public/js/notisblokk.js)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nMelhoria UI: Links clicáveis em alertas e dashboard, padronização de layout\n\n- Dashboard: Títulos de notas recentes agora são links clicáveis para edição\n- Alertas: Nomes de notas são links com cor adaptativa baseada no fundo\n- Botão toggle de alertas com fundo transparente integrado ao design\n- Padronização completa de header e sidebar em todas as telas:\n  - Header: altura fixa 64px, max-width 1400px\n  - Sidebar: espaçamento consistente 24px, sticky top 88px\n  - Layout: grid padronizado com gap 24px\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push origin main)",
+      "Bash(curl -s http://localhost:7070/nota_cadastro.html)",
+      "Bash(tasklist /FI \"IMAGENAME eq java.exe\" /FO CSV)",
+      "Bash(cmd /c \"tasklist | findstr java.exe\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\usuarios_cadastro.html target\\classes\\public\\usuarios_cadastro.html && copy /Y src\\main\\resources\\public\\nota_cadastro.html target\\classes\\public\\nota_cadastro.html && copy /Y src\\main\\resources\\public\\dashboard.html target\\classes\\public\\dashboard.html\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\login.html target\\classes\\public\\login.html && copy /Y src\\main\\resources\\public\\dashboard.html target\\classes\\public\\dashboard.html && copy /Y src\\main\\resources\\public\\css\\layout.css target\\classes\\public\\css\\layout.css && copy /Y src\\main\\resources\\public\\usuarios_cadastro.html target\\classes\\public\\usuarios_cadastro.html && copy /Y src\\main\\resources\\public\\nota_cadastro.html target\\classes\\public\\nota_cadastro.html && copy /Y src\\main\\resources\\public\\css\\notisblokk.css target\\classes\\public\\css\\notisblokk.css && copy /Y src\\main\\resources\\public\\usuarios.html target\\classes\\public\\usuarios.html && copy /Y src\\main\\resources\\public\\status.html target\\classes\\public\\status.html && copy /Y src\\main\\resources\\public\\notisblokk.html target\\classes\\public\\notisblokk.html\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\login.html target\\classes\\public\\login.html\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\dashboard.html target\\classes\\public\\dashboard.html\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\cadastro.html target\\classes\\public\\cadastro.html\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\notisblokk.html target\\classes\\public\\notisblokk.html\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\usuarios.html target\\classes\\public\\usuarios.html\")",
+      "Bash(mvn clean compile)",
+      "Bash(cmd /c \"mvn --version\")",
+      "Bash(cmd /c \"dir /b mvn*.cmd 2>nul || echo Maven wrapper não encontrado\")",
+      "Bash(cmd /c \"set PATH | findstr /i maven\")",
+      "Bash(cmd /c \"copy /Y src\\main\\resources\\public\\nota_cadastro.html target\\classes\\public\\nota_cadastro.html\")",
+      "Bash(powershell -Command \"Get-Content ''target\\classes\\public\\js\\notisblokk.js'' | Select-String -Pattern ''atualizarIndicadorFiltroEtiqueta'' | Measure-Object | Select-Object -ExpandProperty Count\")"
     ],
     "deny": [],
     "ask": []

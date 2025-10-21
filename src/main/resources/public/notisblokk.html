@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!-- VERSÃO ATUALIZADA: Cards de Etiquetas - 2025-10-20 23:30 -->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📋 Notisblokk - Sistema</title>
+  <title>Notisblokk - Sistema</title>
   <link rel="stylesheet" href="/css/layout.css">
   <!-- Datepicker (Flatpickr) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -11,8 +12,8 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f3f4f6;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
       margin: 0;
       padding: 0;
     }
@@ -28,10 +29,11 @@
     }
 
     .card {
-      background: white;
-      border-radius: 15px;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .card-header {
@@ -43,16 +45,18 @@
 
     .card-header h3 {
       font-size: 16px;
-      color: #1f2937;
+      color: var(--text-primary);
       margin: 0;
+      font-weight: 700;
     }
 
     /* Etiquetas - Seção horizontal */
     .etiquetas-section {
-      background: white;
-      border-radius: 15px;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .etiquetas-section-header {
@@ -65,7 +69,8 @@
     .etiquetas-section-header h3 {
       margin: 0;
       font-size: 16px;
-      color: #1f2937;
+      color: var(--text-primary);
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -79,25 +84,28 @@
 
     .etiquetas-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
     }
 
     .etiqueta-card {
       padding: 10px 14px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--color-border);
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       transition: all 0.2s;
       cursor: pointer;
+      background: var(--input-bg);
+      color: var(--input-text);
     }
 
     .etiqueta-card:hover {
-      border-color: #667eea;
-      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.15);
+      border-color: var(--color-primary);
+      box-shadow: 0 3px 10px rgba(153, 23, 60, 0.15);
       transform: translateY(-1px);
+      background: var(--color-primary-light);
     }
 
     .etiqueta-info {
@@ -116,10 +124,16 @@
       white-space: nowrap;
     }
 
+    .etiqueta-checkbox {
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: bold;
+    }
+
     .etiqueta-contador {
       font-size: 11px;
-      color: #6b7280;
-      background: #f3f4f6;
+      color: var(--text-secondary);
+      background: var(--color-border-light);
       padding: 2px 6px;
       border-radius: 8px;
       font-weight: 600;
@@ -148,9 +162,10 @@
 
     /* Alertas - Seção colapsável no topo */
     .alertas-section {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       overflow: hidden;
       transition: all 0.3s ease;
     }
@@ -164,8 +179,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 15px 20px;
-      background: #fef3c7;
-      border-bottom: 2px solid #fbbf24;
+      background: var(--gradient-header);
+      border-bottom: 2px solid var(--color-primary);
       cursor: pointer;
       user-select: none;
     }
@@ -173,7 +188,8 @@
     .alertas-header h3 {
       margin: 0;
       font-size: 16px;
-      color: #92400e;
+      color: var(--text-white);
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -184,7 +200,7 @@
       border: none;
       font-size: 18px;
       cursor: pointer;
-      color: #92400e;
+      color: var(--text-white);
       transition: transform 0.3s;
     }
 
@@ -192,11 +208,16 @@
       transform: rotate(180deg);
     }
 
+    /* Esconder container quando não está expandido */
     .alertas-container {
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 8px;
       padding: 15px 20px;
+    }
+
+    .alertas-section.expanded .alertas-container {
+      display: flex;
       max-height: 300px;
       overflow-y: auto;
     }
@@ -251,11 +272,12 @@
       display: flex;
       gap: 10px;
       align-items: center;
-      background: white;
+      background: var(--color-bg-sections);
       padding: 15px;
       border-radius: 15px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       flex-wrap: wrap;
+      border: 1px solid var(--color-border);
     }
 
     .toolbar-actions {
@@ -266,9 +288,9 @@
     }
 
     .btn-filter, .btn-sort {
-      background: #f3f4f6;
-      color: #374151;
-      border: 2px solid #e5e7eb;
+      background: var(--input-bg);
+      color: var(--input-text);
+      border: 2px solid var(--input-border);
       padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
@@ -281,14 +303,15 @@
     }
 
     .btn-filter:hover, .btn-sort:hover {
-      background: #e5e7eb;
-      border-color: #667eea;
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--text-primary);
     }
 
     .btn-filter.active, .btn-sort.active {
-      background: #667eea;
+      background: var(--color-primary);
       color: white;
-      border-color: #667eea;
+      border-color: var(--color-primary);
     }
 
     .filter-dropdown {
@@ -302,8 +325,8 @@
       top: 100%;
       right: 0;
       margin-top: 5px;
-      background: white;
-      border: 2px solid #e5e7eb;
+      background: var(--color-bg-sections);
+      border: 2px solid var(--color-border);
       border-radius: 10px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       padding: 10px;
@@ -321,15 +344,16 @@
       border-radius: 6px;
       font-size: 13px;
       transition: background 0.2s;
+      color: var(--text-primary);
     }
 
     .filter-option:hover {
-      background: #f3f4f6;
+      background: var(--color-primary-light);
     }
 
     .filter-option.active {
-      background: #eef2ff;
-      color: #667eea;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
       font-weight: 600;
     }
 
@@ -343,21 +367,48 @@
     .search-box input {
       width: 100%;
       padding: 10px 15px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--input-border);
       border-radius: 10px;
       font-size: 14px;
       transition: all 0.3s ease;
       box-sizing: border-box;
+      background: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    .search-box input::placeholder {
+      color: var(--input-placeholder);
+    }
+
+    .search-input-small {
+      padding: 8px 12px;
+      border: 2px solid var(--input-border);
+      border-radius: 8px;
+      font-size: 13px;
+      width: 200px;
+      background: var(--input-bg);
+      color: var(--input-text);
+      transition: all 0.3s ease;
+    }
+
+    .search-input-small::placeholder {
+      color: var(--input-placeholder);
+    }
+
+    .search-input-small:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     .search-box input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     .btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-primary);
       color: white;
       border: none;
       padding: 10px 16px;
@@ -371,8 +422,9 @@
     }
 
     .btn:hover {
+      background: var(--gradient-primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 25px rgba(153, 23, 60, 0.3);
     }
 
     .btn-small {
@@ -408,24 +460,24 @@
     }
 
     thead {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-header);
     }
 
     th {
       padding: 14px 12px;
       text-align: left;
       font-weight: 600;
-      color: #ffffff;
-      font-size: 13px;
+      color: white;
+      font-size: 14px;
       border-bottom: none;
       white-space: nowrap;
     }
 
     td {
       padding: 12px;
-      border-bottom: 1px solid #f3f4f6;
-      font-size: 13px;
-      color: #1f2937;
+      border-bottom: 1px solid var(--color-border-light);
+      font-size: 14px;
+      color: var(--text-primary);
       vertical-align: middle;
     }
 
@@ -439,7 +491,7 @@
     #tabelaNotas th:nth-child(7), #tabelaNotas td:nth-child(7) { width: 15%; text-align: center; } /* Ações */
 
     tbody tr:hover {
-      background: #f9fafb;
+      background: var(--color-primary-light);
     }
 
     .status-badge {
@@ -451,12 +503,13 @@
     }
 
     .badge-etiqueta {
-      background: #EDE9FE;
-      color: #5B21B6;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
       padding: 4px 10px;
       border-radius: 12px;
       font-size: 12px;
       font-weight: 600;
+      border: 1px solid var(--color-primary);
     }
 
     .prazo-normal { color: #10B981; }
@@ -472,18 +525,19 @@
     }
 
     .btn-table {
-      background: #f3f4f6;
+      background: none;
       border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
       cursor: pointer;
-      font-size: 12px;
-      margin: 0 2px;
-      transition: all 0.2s;
+      font-size: 14px;
+      padding: 4px 8px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      color: var(--text-secondary);
     }
 
     .btn-table:hover {
-      background: #e5e7eb;
+      opacity: 1;
+      color: var(--text-primary);
     }
 
     /* Modal - Menor */
@@ -505,8 +559,9 @@
     }
 
     .modal-content {
-      background: white;
-      border-radius: 15px;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
       width: 90%;
       max-width: 420px;
       max-height: 90vh;
@@ -519,13 +574,14 @@
       justify-content: space-between;
       align-items: center;
       padding: 18px 20px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--color-border);
     }
 
     .modal-header h2 {
       margin: 0;
       font-size: 18px;
-      color: #1f2937;
+      color: var(--text-primary);
+      font-weight: 700;
     }
 
     .modal-close {
@@ -533,12 +589,12 @@
       border: none;
       font-size: 24px;
       cursor: pointer;
-      color: #9ca3af;
+      color: var(--text-secondary);
       transition: color 0.2s;
     }
 
     .modal-close:hover {
-      color: #374151;
+      color: var(--text-primary);
     }
 
     .modal form {
@@ -553,7 +609,7 @@
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
-      color: #374151;
+      color: var(--text-primary);
       font-size: 13px;
     }
 
@@ -561,19 +617,26 @@
     .form-group select {
       width: 100%;
       padding: 10px 12px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--input-border);
       border-radius: 8px;
       font-size: 14px;
       font-family: inherit;
       transition: all 0.3s ease;
       box-sizing: border-box;
+      background: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    .form-group input::placeholder,
+    .form-group select::placeholder {
+      color: var(--input-placeholder);
     }
 
     .form-group input:focus,
     .form-group select:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     /* Campo de cor melhorado */
@@ -593,7 +656,7 @@
     .color-preview {
       flex: 1;
       padding: 10px 12px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--color-border);
       border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
@@ -605,13 +668,13 @@
       justify-content: flex-end;
       gap: 10px;
       padding: 16px 20px;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--color-border);
     }
 
     .btn-cancelar {
-      background: #f3f4f6;
-      color: #374151;
-      border: none;
+      background: var(--input-bg);
+      color: var(--text-secondary);
+      border: 2px solid var(--color-border);
       padding: 10px 18px;
       border-radius: 8px;
       font-weight: 600;
@@ -621,11 +684,13 @@
     }
 
     .btn-cancelar:hover {
-      background: #e5e7eb;
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--text-primary);
     }
 
     .btn-salvar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-primary);
       color: white;
       border: none;
       padding: 10px 18px;
@@ -637,8 +702,9 @@
     }
 
     .btn-salvar:hover {
+      background: var(--gradient-primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 5px 15px rgba(153, 23, 60, 0.3);
     }
 
     /* Tabs para Status */
@@ -646,7 +712,7 @@
       display: flex;
       gap: 5px;
       margin-bottom: 15px;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: 2px solid var(--color-border);
     }
 
     .tab {
@@ -655,18 +721,18 @@
       border: none;
       cursor: pointer;
       font-weight: 600;
-      color: #6b7280;
+      color: var(--text-secondary);
       border-bottom: 3px solid transparent;
       transition: all 0.2s;
     }
 
     .tab:hover {
-      color: #374151;
+      color: var(--text-primary);
     }
 
     .tab.active {
-      color: #667eea;
-      border-bottom-color: #667eea;
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
     }
 
     .tab-content {
@@ -679,10 +745,11 @@
 
     /* Status gerenciamento - Tabela */
     .status-table-container {
-      background: white;
-      border-radius: 15px;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       overflow-x: auto;
       width: 100%;
     }
@@ -693,7 +760,7 @@
     }
 
     .status-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-header);
       padding: 14px 12px;
       text-align: left;
       font-weight: 600;
@@ -704,14 +771,14 @@
 
     .status-table td {
       padding: 12px;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid var(--color-border-light);
       font-size: 13px;
-      color: #1f2937;
+      color: var(--text-primary);
       vertical-align: middle;
     }
 
     .status-table tbody tr:hover {
-      background: #f9fafb;
+      background: var(--color-primary-light);
     }
 
     .status-table td:last-child {
@@ -729,6 +796,39 @@
     /* Prevenir overflow horizontal */
     .container {
       overflow-x: hidden;
+    }
+
+    /* Estado vazio */
+    .vazio {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    /* Botão limpar filtro */
+    .btn-limpar-filtro {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 5px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .btn-limpar-filtro:hover {
+      opacity: 1;
+    }
+
+    .badge-etiqueta {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
     }
 
     /* Responsivo */
@@ -793,7 +893,7 @@
     }
 
     tbody tr:hover {
-      background: #f9fafb;
+      background: var(--color-primary-light);
     }
 
     .nota-titulo {
@@ -812,9 +912,13 @@
     <div class="header-content">
       <div class="left-tools">
         <button id="btnSidebarToggle" class="btn-sidebar" aria-label="Alternar menu lateral">☰</button>
-        <h1>🚀 Sistema</h1>
+        <h1>Sistema</h1>
       </div>
       <div class="user-menu">
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-option active" data-theme="light">☼</div>
+          <div class="theme-toggle-option" data-theme="dark">☾</div>
+        </div>
         <div class="user-info">
           <div class="user-name" id="userName">Carregando...</div>
           <div class="user-email" id="userEmail"></div>
@@ -854,9 +958,8 @@
           <div class="etiquetas-section-header">
             <h3><span>🏷️</span> Etiquetas</h3>
             <div class="etiquetas-controls">
-              <input type="text" id="buscaEtiquetas" placeholder="🔍 Buscar..."
-                     style="padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 13px; width: 200px;">
-              <button class="btn btn-small" onclick="modalNovaEtiqueta()">➕ Nova</button>
+              <input type="text" id="buscaEtiquetas" placeholder="🔍 Buscar..." class="search-input-small">
+              <button class="btn btn-small" onclick="modalNovaEtiqueta()">+ Nova</button>
             </div>
           </div>
           <div class="etiquetas-grid" id="etiquetasGrid">
@@ -875,6 +978,10 @@
 
           <!-- Tab: Notas -->
           <div id="tabNotas" class="tab-content active" style="padding: 20px;">
+            <!-- Indicador de filtro por etiqueta -->
+            <div id="indicadorFiltroEtiqueta" style="display: none; align-items: center; gap: 8px; padding: 10px 15px; background: var(--color-primary-light); border: 1px solid var(--color-primary); border-radius: 10px; margin-bottom: 15px;">
+            </div>
+
             <div class="toolbar">
               <div class="search-box">
                 <input type="text" id="buscaNotas" placeholder="🔍 Buscar notas..." oninput="filtrarNotas(this.value)">
@@ -902,7 +1009,7 @@
                     <span>🔍</span> Filtrar
                   </button>
                   <div class="filter-menu" id="filterMenu">
-                    <div class="filter-option active" onclick="filtrarPorStatus('todos')">📋 Todas</div>
+                    <div class="filter-option active" onclick="filtrarPorStatus('todos')">□ Todas</div>
                     <div style="border-top: 1px solid #e5e7eb; margin: 8px 0;"></div>
                     <div class="filter-option" onclick="filtrarPorPrazo('atrasadas')">🔴 Atrasadas</div>
                     <div class="filter-option" onclick="filtrarPorPrazo('urgentes')">🟠 Urgentes (1-2 dias)</div>
@@ -911,7 +1018,7 @@
                   </div>
                 </div>
 
-                <a href="/nota_cadastro.html" class="btn">➕ Nova Nota</a>
+                <a href="/nota_cadastro.html" class="btn">+ Nova Nota</a>
               </div>
             </div>
 
@@ -930,7 +1037,7 @@
                     </tr>
                   </thead>
                   <tbody id="corpoTabela">
-                    <tr><td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">Carregando notas...</td></tr>
+                    <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-secondary);">Carregando notas...</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -941,7 +1048,7 @@
           <div id="tabStatus" class="tab-content" style="padding: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
               <h3 style="margin: 0; font-size: 18px;">Gerenciar Status</h3>
-              <button class="btn" onclick="modalNovoStatus()">➕ Novo Status</button>
+              <button class="btn" onclick="modalNovoStatus()">+ Novo Status</button>
             </div>
             <div class="status-table-container">
               <table class="status-table" id="statusTable">
@@ -953,7 +1060,7 @@
                   </tr>
                 </thead>
                 <tbody id="statusTableBody">
-                  <tr><td colspan="3" style="text-align: center; padding: 40px; color: #6b7280;">Carregando...</td></tr>
+                  <tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--text-secondary);">Carregando...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1002,7 +1109,7 @@
           <label for="statusCor">Cor *</label>
           <div class="color-input-wrapper">
             <input type="color" id="statusCor" value="#667eea" onchange="atualizarPreviewCor()">
-            <div class="color-preview" id="colorPreview" style="background: #667eea; color: #ffffff;">#667eea</div>
+            <div class="color-preview" id="colorPreview" style="background: var(--color-primary); color: #ffffff;">var(--color-primary)</div>
           </div>
         </div>
         <div class="modal-footer">
@@ -1015,8 +1122,39 @@
 
   <script src="/js/notisblokk.js"></script>
   <script>
+    // Toggle de tema
+    function initThemeToggle() {
+      const toggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'light';
+
+      // Aplicar tema salvo
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggleUI(savedTheme);
+
+      // Event listener para toggle
+      toggle.querySelectorAll('.theme-toggle-option').forEach(option => {
+        option.addEventListener('click', () => {
+          const theme = option.dataset.theme;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+          updateThemeToggleUI(theme);
+        });
+      });
+    }
+
+    function updateThemeToggleUI(theme) {
+      document.querySelectorAll('.theme-toggle-option').forEach(option => {
+        if (option.dataset.theme === theme) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+
     // Autenticação
     window.addEventListener('DOMContentLoaded', async () => {
+      initThemeToggle();
       const token = localStorage.getItem('auth_token');
       if (!token) { window.location.href = '/login.html'; return; }
 
@@ -1101,9 +1239,9 @@
 
         if (json.sucesso && json.dados.length > 0) {
           grid.innerHTML = json.dados.map(et => `
-            <div class="etiqueta-card">
+            <div class="etiqueta-card" data-id="${et.id}" onclick="selecionarEtiqueta(${et.id})">
               <div class="etiqueta-info">
-                <span>🏷️</span>
+                <span class="etiqueta-checkbox">☐</span>
                 <strong>${et.nome}</strong>
                 <span class="etiqueta-contador">${et.contador || 0}</span>
               </div>
@@ -1114,7 +1252,7 @@
             </div>
           `).join('');
         } else {
-          grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 20px;">Nenhuma etiqueta cadastrada.</div>';
+          grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px;" class="vazio">Nenhuma etiqueta cadastrada.</div>';
         }
       } catch (e) {
         console.error('Erro ao carregar etiquetas:', e);
@@ -1308,17 +1446,17 @@
               <td><span class="color-dot" style="background: ${s.corHex}"></span></td>
               <td><strong>${s.nome}</strong></td>
               <td>
-                <button class="btn-table" onclick="editarStatus(${s.id}, '${s.nome.replace(/'/g, "\\'")}', '${s.corHex}')" title="Editar">✏️ Editar</button>
-                <button class="btn-table" onclick="excluirStatus(${s.id})" title="Excluir">🗑️ Excluir</button>
+                <button class="btn-table" onclick="editarStatus(${s.id}, '${s.nome.replace(/'/g, "\\'")}', '${s.corHex}')" title="Editar">✎</button>
+                <button class="btn-table" onclick="excluirStatus(${s.id})" title="Excluir">✕</button>
               </td>
             </tr>
           `).join('');
         } else {
-          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #6b7280; padding: 40px;">Nenhum status cadastrado.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="3" class="vazio">Nenhum status cadastrado.</td></tr>';
         }
       } catch (e) {
         console.error('Erro ao carregar status:', e);
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ef4444; padding: 40px;">Erro ao carregar status.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--color-danger); padding: 40px;">Erro ao carregar status.</td></tr>';
       }
     }
 
@@ -1456,6 +1594,5 @@
       }
     }
   </script>
-  <script src="/js/notisblokk.js"></script>
 </body>
 </html>

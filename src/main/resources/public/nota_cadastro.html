@@ -14,8 +14,8 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f3f4f6;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
       margin: 0;
       padding: 0;
     }
@@ -26,11 +26,12 @@
     }
 
     .nota-header {
-      background: white;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
       border-radius: 15px;
       padding: 20px 25px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -38,14 +39,14 @@
 
     .nota-header h1 {
       font-size: 24px;
-      color: #1f2937;
+      color: var(--text-primary);
       margin: 0;
     }
 
     .btn-voltar {
-      background: white;
-      color: #374151;
-      border: 2px solid #e5e7eb;
+      background: var(--input-bg);
+      color: var(--text-secondary);
+      border: 2px solid var(--color-border);
       padding: 10px 18px;
       border-radius: 10px;
       cursor: pointer;
@@ -58,15 +59,17 @@
     }
 
     .btn-voltar:hover {
-      background: #f9fafb;
-      border-color: #d1d5db;
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--text-primary);
     }
 
     .nota-form {
-      background: white;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
       border-radius: 15px;
       padding: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     }
 
     .form-row {
@@ -84,7 +87,7 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
-      color: #374151;
+      color: var(--text-primary);
       font-size: 14px;
     }
 
@@ -92,57 +95,109 @@
     .form-group select {
       width: 100%;
       padding: 12px 15px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--input-border);
       border-radius: 10px;
       font-size: 15px;
       font-family: inherit;
       transition: all 0.3s ease;
       box-sizing: border-box;
+      background: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    .form-group input::placeholder,
+    .form-group select::placeholder {
+      color: var(--input-placeholder);
     }
 
     .form-group input:focus,
     .form-group select:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     /* Editor Quill customizado */
     #editor-container {
       min-height: 400px;
-      background: white;
-      border: 2px solid #e5e7eb;
+      background: var(--input-bg);
+      border: 2px solid var(--input-border);
       border-radius: 10px;
       font-size: 15px;
     }
 
     #editor-container:focus-within {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     .ql-toolbar {
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
-      background: #f9fafb;
+      background: var(--input-bg);
       border: none;
-      border-bottom: 2px solid #e5e7eb;
+      border-bottom: 2px solid var(--input-border);
     }
 
     .ql-container {
       border: none;
       font-size: 15px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--input-text);
     }
 
     .ql-editor {
       min-height: 350px;
       padding: 20px;
+      color: var(--input-text);
     }
 
     .ql-editor.ql-blank::before {
-      color: #9ca3af;
+      color: var(--input-placeholder);
       font-style: normal;
+    }
+
+    /* Botões e ícones do Quill no modo escuro */
+    [data-theme="dark"] .ql-toolbar .ql-stroke {
+      stroke: var(--input-text);
+    }
+
+    [data-theme="dark"] .ql-toolbar .ql-fill {
+      fill: var(--input-text);
+    }
+
+    [data-theme="dark"] .ql-toolbar .ql-picker-label {
+      color: var(--input-text);
+    }
+
+    [data-theme="dark"] .ql-toolbar button:hover,
+    [data-theme="dark"] .ql-toolbar button.ql-active {
+      background: var(--color-primary-light);
+    }
+
+    [data-theme="dark"] .ql-toolbar button:hover .ql-stroke,
+    [data-theme="dark"] .ql-toolbar button.ql-active .ql-stroke {
+      stroke: var(--color-primary);
+    }
+
+    [data-theme="dark"] .ql-toolbar button:hover .ql-fill,
+    [data-theme="dark"] .ql-toolbar button.ql-active .ql-fill {
+      fill: var(--color-primary);
+    }
+
+    /* Dropdowns do Quill */
+    [data-theme="dark"] .ql-picker-options {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+    }
+
+    [data-theme="dark"] .ql-picker-item {
+      color: var(--input-text);
+    }
+
+    [data-theme="dark"] .ql-picker-item:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
     }
 
     /* Preview do status */
@@ -181,23 +236,26 @@
     }
 
     .btn-cancelar {
-      background: #f3f4f6;
-      color: #374151;
-      border: 2px solid #e5e7eb;
+      background: var(--input-bg);
+      color: var(--text-secondary);
+      border: 2px solid var(--color-border);
     }
 
     .btn-cancelar:hover {
-      background: #e5e7eb;
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--text-primary);
     }
 
     .btn-salvar {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-primary);
       color: white;
     }
 
     .btn-salvar:hover {
+      background: var(--gradient-primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 25px rgba(153, 23, 60, 0.3);
     }
 
     .btn-salvar:disabled {
@@ -244,6 +302,70 @@
       border: 1px solid #a7f3d0;
     }
 
+    /* Flatpickr (Date Picker) no modo escuro */
+    [data-theme="dark"] .flatpickr-calendar {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    [data-theme="dark"] .flatpickr-months {
+      background: var(--color-bg-sections);
+      border-bottom: 1px solid var(--input-border);
+    }
+
+    [data-theme="dark"] .flatpickr-current-month {
+      color: var(--input-text);
+    }
+
+    [data-theme="dark"] .flatpickr-monthDropdown-months,
+    [data-theme="dark"] .numInputWrapper input {
+      background: var(--input-bg);
+      color: var(--input-text);
+      border-color: var(--input-border);
+    }
+
+    [data-theme="dark"] .flatpickr-weekdays {
+      background: var(--color-bg-sections);
+    }
+
+    [data-theme="dark"] .flatpickr-weekday {
+      color: var(--text-secondary);
+    }
+
+    [data-theme="dark"] .flatpickr-day {
+      color: var(--input-text);
+      border-color: var(--input-border);
+    }
+
+    [data-theme="dark"] .flatpickr-day:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    [data-theme="dark"] .flatpickr-day.selected,
+    [data-theme="dark"] .flatpickr-day.selected:hover {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    [data-theme="dark"] .flatpickr-day.today {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    [data-theme="dark"] .flatpickr-day.disabled,
+    [data-theme="dark"] .flatpickr-day.disabled:hover {
+      color: var(--text-secondary);
+      opacity: 0.3;
+    }
+
+    [data-theme="dark"] .flatpickr-month-nav svg {
+      fill: var(--input-text);
+    }
+
     @media (max-width: 768px) {
       .form-row {
         grid-template-columns: 1fr;
@@ -270,9 +392,13 @@
     <div class="header-content">
       <div class="left-tools">
         <button id="btnSidebarToggle" class="btn-sidebar" aria-label="Alternar menu lateral">☰</button>
-        <h1>🚀 Sistema</h1>
+        <h1>Sistema</h1>
       </div>
       <div class="user-menu">
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-option active" data-theme="light">☼</div>
+          <div class="theme-toggle-option" data-theme="dark">☾</div>
+        </div>
         <div class="user-info">
           <div class="user-name" id="userName">Carregando...</div>
           <div class="user-email" id="userEmail"></div>
@@ -351,8 +477,40 @@
   <script>
     let quill;
 
+    // Toggle de tema
+    function initThemeToggle() {
+      const toggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'light';
+
+      // Aplicar tema salvo
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggleUI(savedTheme);
+
+      // Event listener para toggle
+      toggle.querySelectorAll('.theme-toggle-option').forEach(option => {
+        option.addEventListener('click', () => {
+          const theme = option.dataset.theme;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+          updateThemeToggleUI(theme);
+        });
+      });
+    }
+
+    function updateThemeToggleUI(theme) {
+      document.querySelectorAll('.theme-toggle-option').forEach(option => {
+        if (option.dataset.theme === theme) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+
     // Autenticação
     window.addEventListener('DOMContentLoaded', async () => {
+      initThemeToggle();
+
       const token = localStorage.getItem('auth_token');
       if (!token) { window.location.href = '/login.html'; return; }
 
@@ -412,8 +570,14 @@
       // Verificar se é edição
       const params = new URLSearchParams(window.location.search);
       const notaId = params.get('id');
+      console.log('URL params:', window.location.search);
+      console.log('ID da nota:', notaId);
+
       if (notaId) {
+        console.log('Iniciando carregamento da nota ID:', notaId);
         await carregarNota(notaId);
+      } else {
+        console.log('Modo de criação - sem ID na URL');
       }
     });
 
@@ -470,14 +634,26 @@
         });
         const json = await resp.json();
 
+        console.log('Resposta da API:', json);
+
         if (json.sucesso && json.dados) {
           const nota = json.dados;
+          console.log('Dados da nota:', nota);
+
           document.getElementById('pageTitulo').textContent = '✏️ Editar Nota';
           document.getElementById('notaId').value = nota.id;
           document.getElementById('notaTitulo').value = nota.titulo;
           document.getElementById('notaEtiqueta').value = nota.etiquetaId;
           document.getElementById('notaStatus').value = nota.statusId;
-          document.getElementById('notaPrazo').value = formatarDataParaBR(nota.prazoFinal);
+
+          // Converter prazo para formato dd/mm/yyyy se necessário
+          let prazoFormatado = nota.prazoFinal;
+          if (prazoFormatado && prazoFormatado.includes('-')) {
+            // Formato ISO: 2025-10-24 → 24/10/2025
+            prazoFormatado = formatarDataParaBR(prazoFormatado);
+          }
+          console.log('Prazo formatado:', prazoFormatado);
+          document.getElementById('notaPrazo').value = prazoFormatado;
 
           // Carregar conteúdo no editor
           if (nota.conteudo) {
@@ -485,6 +661,9 @@
           }
 
           atualizarPreviewStatus();
+          console.log('Nota carregada com sucesso!');
+        } else {
+          console.error('Resposta sem sucesso:', json);
         }
       } catch (e) {
         console.error('Erro ao carregar nota:', e);
@@ -507,7 +686,7 @@
       const option = select.options[select.selectedIndex];
 
       if (option && option.value) {
-        const cor = option.dataset.cor || '#667eea';
+        const cor = option.dataset.cor || '#99173C';
         const nome = option.textContent;
 
         // Calcular cor do texto baseada na luminosidade

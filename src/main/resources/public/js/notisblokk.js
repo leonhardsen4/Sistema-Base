@@ -19,7 +19,8 @@ const nivelClasses = {
 const state = {
   etiquetas: [],
   notas: [],
-  alertas: []
+  alertas: [],
+  etiquetaSelecionada: null // ID da etiqueta selecionada para filtrar
 };
 
 function getToken() {
@@ -135,7 +136,7 @@ async function carregarAlertas() {
         <div class="alerta ${nivelClasse}" style="background: ${cor}; color: ${corTexto};">
           <div class="alerta-header" onclick="toggleAlerta(this); event.stopPropagation();">
             <span>${mensagem}</span>
-            <button class="alerta-toggle" style="color: ${corTexto};">▼</button>
+            <button class="alerta-toggle" style="background: ${cor}; color: ${corTexto}; border: 1px solid ${corTexto};">▼</button>
           </div>
           <div class="alerta-conteudo" style="display:none;">${notasHtml || '<div class="vazio">Sem notas neste alerta.</div>'}</div>
         </div>
@@ -221,10 +222,20 @@ function expandirAlerta(el) {
 function toggleAlertas() {
   const container = $('#alertasContainer');
   const btn = $('#toggleAlertas');
-  const hidden = container.style.display === 'none';
-  container.style.display = hidden ? 'grid' : 'none';
-  btn.textContent = hidden ? 'Colapsar ▲' : 'Expandir ▼';
-  btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+
+  // Verifica se está escondido pela classe ou style
+  const isHidden = container.style.display === 'none' ||
+                   window.getComputedStyle(container).display === 'none';
+
+  if (isHidden) {
+    container.style.display = 'grid';
+    btn.textContent = 'Colapsar ▲';
+    btn.setAttribute('aria-expanded', 'true');
+  } else {
+    container.style.display = 'none';
+    btn.textContent = 'Expandir ▼';
+    btn.setAttribute('aria-expanded', 'false');
+  }
 }
 
 // ===== Etiquetas =====
@@ -238,12 +249,14 @@ async function carregarEtiquetas() {
     preencherEtiquetasNoSelect();
   } catch (e) {
     console.error('Erro etiquetas:', e);
-    $('#listaEtiquetas').innerHTML = '<div class="vazio">Não foi possível carregar etiquetas.</div>';
+    const lista = $('#etiquetasGrid');
+    if (lista) lista.innerHTML = '<div class="vazio">Não foi possível carregar etiquetas.</div>';
   }
 }
 
 function renderEtiquetas(items) {
-  const lista = $('#listaEtiquetas');
+  const lista = $('#etiquetasGrid');
+  if (!lista) return;
   lista.innerHTML = '';
   if (!items.length) {
     lista.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280; font-size: 13px;">Nenhuma etiqueta encontrada.</div>';
@@ -251,14 +264,18 @@ function renderEtiquetas(items) {
   }
   items.forEach((et) => {
     const el = document.createElement('div');
-    el.className = 'etiqueta-item';
+    el.className = 'etiqueta-card';
     el.dataset.id = et.id;
     el.innerHTML = `
-      <span class="etiqueta-checkbox">☐</span>
-      <span class="etiqueta-nome">${et.nome || 'Sem nome'}</span>
-      <span class="etiqueta-contador">(${et.contador ?? 0})</span>
-      <button class="btn-icone-small" onclick="editarEtiqueta(${et.id}, '${(et.nome || '').replace(/'/g, "\\'")}'); event.stopPropagation();" title="Editar">✏️</button>
-      <button class="btn-icone-small" onclick="excluirEtiqueta(${et.id}); event.stopPropagation();" title="Excluir">🗑️</button>
+      <div class="etiqueta-info">
+        <span class="etiqueta-checkbox">☐</span>
+        <strong>${et.nome || 'Sem nome'}</strong>
+        <span class="etiqueta-contador">${et.contador ?? 0}</span>
+      </div>
+      <div class="etiqueta-acoes">
+        <button class="btn-icone-small" onclick="editarEtiqueta(${et.id}, '${(et.nome || '').replace(/'/g, "\\'")}'); event.stopPropagation();" title="Editar">✏️</button>
+        <button class="btn-icone-small" onclick="excluirEtiqueta(${et.id}); event.stopPropagation();" title="Excluir">🗑️</button>
+      </div>
     `;
     el.addEventListener('click', () => selecionarEtiqueta(et.id));
     lista.appendChild(el);
@@ -266,18 +283,109 @@ function renderEtiquetas(items) {
 }
 
 function filtrarEtiquetas(term) {
-  const etiquetas = document.querySelectorAll('.etiqueta-item');
+  const etiquetas = document.querySelectorAll('.etiqueta-card');
   const busca = (term || '').toLowerCase();
   etiquetas.forEach(etiq => {
-    const nomeEl = etiq.querySelector('.etiqueta-nome');
-    const nome = (nomeEl?.textContent || '').toLowerCase();
-    etiq.style.display = nome.includes(busca) ? 'grid' : 'none';
+    const texto = (etiq.textContent || '').toLowerCase();
+    etiq.style.display = texto.includes(busca) ? 'flex' : 'none';
   });
 }
 
 function selecionarEtiqueta(id) {
-  // Carregar notas por etiqueta (quando backend estiver pronto)
-  alert(`Etiqueta ${id} selecionada – implementar carregamento de notas por etiqueta.`);
+  // Toggle: se clicar na mesma, desseleciona
+  state.etiquetaSelecionada = (state.etiquetaSelecionada === id) ? null : id;
+
+  // Atualizar visual dos checkboxes
+  document.querySelectorAll('.etiqueta-card').forEach(item => {
+    const checkbox = item.querySelector('.etiqueta-checkbox');
+    const itemId = parseInt(item.dataset.id);
+    if (itemId === id) {
+      checkbox.textContent = (state.etiquetaSelecionada === id) ? '☑' : '☐';
+      item.style.background = (state.etiquetaSelecionada === id) ? 'var(--color-primary-light)' : '';
+      item.style.borderColor = (state.etiquetaSelecionada === id) ? 'var(--color-primary)' : '';
+    } else {
+      checkbox.textContent = '☐';
+      item.style.background = '';
+      item.style.borderColor = '';
+    }
+  });
+
+  // Atualizar indicador de filtro
+  atualizarIndicadorFiltroEtiqueta();
+
+  // Recarregar notas com filtro aplicado
+  carregarNotas();
+}
+
+function limparFiltroEtiqueta() {
+  state.etiquetaSelecionada = null;
+
+  // Limpar visual
+  document.querySelectorAll('.etiqueta-card').forEach(item => {
+    const checkbox = item.querySelector('.etiqueta-checkbox');
+    checkbox.textContent = '☐';
+    item.style.background = '';
+    item.style.borderColor = '';
+  });
+
+  // Atualizar indicador
+  atualizarIndicadorFiltroEtiqueta();
+
+  // Recarregar todas as notas
+  carregarNotas();
+}
+
+function atualizarIndicadorFiltroEtiqueta() {
+  const indicador = document.getElementById('indicadorFiltroEtiqueta');
+  if (!indicador) return;
+
+  if (state.etiquetaSelecionada) {
+    const etiqueta = state.etiquetas.find(e => e.id === state.etiquetaSelecionada);
+    if (etiqueta) {
+      indicador.innerHTML = `
+        <span style="color: var(--text-secondary); font-size: 13px;">Filtrado por:</span>
+        <span class="badge badge-etiqueta">${etiqueta.nome}</span>
+        <button onclick="limparFiltroEtiqueta()" class="btn-limpar-filtro" title="Limpar filtro">✕</button>
+      `;
+      indicador.style.display = 'flex';
+    }
+  } else {
+    indicador.style.display = 'none';
+  }
+}
+
+function filtrarNotasPorEtiqueta() {
+  const tbody = document.getElementById('corpoTabela');
+  if (!tbody) return;
+
+  const todasAsLinhas = tbody.querySelectorAll('tr[data-id]');
+
+  if (etiquetaSelecionada === null) {
+    // Mostrar todas as notas
+    todasAsLinhas.forEach(tr => tr.style.display = '');
+  } else {
+    // Filtrar apenas notas da etiqueta selecionada
+    todasAsLinhas.forEach(tr => {
+      const notaId = parseInt(tr.dataset.id);
+      const nota = state.notas.find(n => n.id === notaId);
+
+      if (nota && nota.etiquetaId === etiquetaSelecionada) {
+        tr.style.display = '';
+      } else {
+        tr.style.display = 'none';
+      }
+    });
+  }
+
+  // Atualizar contador
+  const visiveis = Array.from(todasAsLinhas).filter(tr => tr.style.display !== 'none').length;
+  atualizarContadorNotas(visiveis);
+}
+
+function atualizarContadorNotas(total) {
+  // Você pode adicionar um elemento no HTML para mostrar "X notas encontradas"
+  // Por enquanto, apenas console.log
+  console.log(`Mostrando ${total} nota(s)`);
 }
 
 function excluirEtiqueta(id) {
@@ -310,14 +418,15 @@ function modalNovaEtiqueta() {
 }
 
 // ===== Notas =====
-async function carregarNotas(etiquetaId = null) {
+async function carregarNotas() {
   const tbody = document.getElementById('corpoTabela');
   if (!tbody) return;
 
   try {
+    // Usar etiqueta selecionada do state
     let url = api.notas;
-    if (etiquetaId) {
-      url = `${api.notas}/etiqueta/${etiquetaId}`;
+    if (state.etiquetaSelecionada) {
+      url = `${api.notas}/etiqueta/${state.etiquetaSelecionada}`;
     }
 
     const response = await fetch(url, {
@@ -325,6 +434,9 @@ async function carregarNotas(etiquetaId = null) {
     });
     const data = await response.json();
     const notas = Array.isArray(data) ? data : (data.dados || []);
+
+    // Salvar notas no state para uso posterior no filtro
+    state.notas = notas;
 
     if (!notas.length) {
       tbody.innerHTML = '<tr><td colspan="7" class="texto-centralizado">Nenhuma nota encontrada</td></tr>';
@@ -339,7 +451,7 @@ async function carregarNotas(etiquetaId = null) {
 
       return `
         <tr data-id="${nota.id}">
-          <td class="nota-titulo col-titulo" onclick="abrirNota(${nota.id})">${nota.titulo || 'Sem título'}</td>
+          <td class="nota-titulo col-titulo" onclick="editarNota(${nota.id})" style="cursor: pointer;">${nota.titulo || 'Sem título'}</td>
           <td class="col-etiqueta"><span class="badge badge-etiqueta">${nota.etiquetaNome || '-'}</span></td>
           <td class="col-status">
             <span class="status-badge" style="background-color: ${nota.statusCor || '#CCC'}; color: ${corTexto};">
@@ -350,8 +462,8 @@ async function carregarNotas(etiquetaId = null) {
           <td class="col-criacao data-pequena">${nota.dataCriacao || '-'}</td>
           <td class="col-atualizacao data-pequena">${nota.dataAtualizacao || '-'}</td>
           <td class="col-acoes">
-            <button onclick="editarNota(${nota.id})" class="btn-icone" title="Editar">✏️</button>
-            <button onclick="confirmarExclusaoNota(${nota.id})" class="btn-icone" title="Excluir">🗑️</button>
+            <button onclick="editarNota(${nota.id})" class="btn-table" title="Editar">✎</button>
+            <button onclick="confirmarExclusaoNota(${nota.id})" class="btn-table" title="Excluir">✕</button>
           </td>
         </tr>
       `;

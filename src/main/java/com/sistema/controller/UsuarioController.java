@@ -1,8 +1,10 @@
 package com.sistema.controller;
 
+import com.sistema.model.UsuarioDTO;
 import com.sistema.service.UsuarioService;
 import io.javalin.http.Context;
 import java.util.Map;
+import java.util.Optional;
 
 public class UsuarioController {
     
@@ -94,9 +96,26 @@ public class UsuarioController {
         try {
             var id = Long.parseLong(ctx.pathParam("id"));
             var body = ctx.bodyAsClass(UsuarioUpdateRequest.class);
-            
-            var usuarioOpt = service.atualizar(id, body.nome, body.email, body.telefone);
-            
+
+            // Determinar qual método usar baseado nos campos enviados
+            Optional<UsuarioDTO> usuarioOpt;
+            boolean temSenha = body.senha != null && !body.senha.trim().isEmpty();
+            boolean temAtivo = body.ativo != null;
+
+            if (temSenha && temAtivo) {
+                // Atualizar tudo: dados, senha e status
+                usuarioOpt = service.atualizarCompleto(id, body.nome, body.email, body.telefone, body.senha, body.ativo);
+            } else if (temSenha) {
+                // Atualizar dados e senha
+                usuarioOpt = service.atualizarComSenha(id, body.nome, body.email, body.telefone, body.senha);
+            } else if (temAtivo) {
+                // Atualizar dados e status
+                usuarioOpt = service.atualizarComStatus(id, body.nome, body.email, body.telefone, body.ativo);
+            } else {
+                // Atualizar apenas dados básicos
+                usuarioOpt = service.atualizar(id, body.nome, body.email, body.telefone);
+            }
+
             if (usuarioOpt.isPresent()) {
                 ctx.json(Map.of(
                     "sucesso", true,
@@ -109,7 +128,7 @@ public class UsuarioController {
                     "mensagem", "Usuário não encontrado"
                 ));
             }
-            
+
         } catch (IllegalArgumentException e) {
             ctx.status(400).json(Map.of(
                 "sucesso", false,
@@ -160,5 +179,7 @@ public class UsuarioController {
         public String nome;
         public String email;
         public String telefone;
+        public String senha; // Opcional - se não informado, mantém a senha atual
+        public Boolean ativo; // Opcional - se não informado, mantém o status atual
     }
 }

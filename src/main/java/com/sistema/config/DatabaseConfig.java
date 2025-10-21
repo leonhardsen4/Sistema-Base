@@ -8,7 +8,12 @@ public class DatabaseConfig {
     
     // Obter conexão com o banco
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+        Connection conn = DriverManager.getConnection(URL);
+        // IMPORTANTE: Habilitar foreign keys no SQLite (por padrão vem desabilitado)
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("PRAGMA foreign_keys = ON");
+        }
+        return conn;
     }
     
     // Inicializar banco de dados (criar tabelas)

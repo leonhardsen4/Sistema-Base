@@ -1,10 +1,12 @@
 package com.sistema.controller;
 
 import com.sistema.model.Etiqueta;
+import com.sistema.model.EtiquetaDTO;
 import com.sistema.repository.EtiquetaRepository;
 import io.javalin.http.Context;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +16,18 @@ public class EtiquetaController {
     public void listar(Context ctx) {
         try {
             List<Etiqueta> etiquetas = repository.buscarTodos();
+            Map<Long, Integer> contadores = repository.contarNotasPorTodasEtiquetas();
+
+            // Converter para DTOs com contadores
+            List<EtiquetaDTO> dtos = new ArrayList<>();
+            for (Etiqueta etiqueta : etiquetas) {
+                Integer contador = contadores.getOrDefault(etiqueta.getId(), 0);
+                dtos.add(new EtiquetaDTO(etiqueta, contador));
+            }
+
             ctx.json(Map.of(
                 "sucesso", true,
-                "dados", etiquetas
+                "dados", dtos
             ));
         } catch (Exception e) {
             ctx.status(500).json(Map.of(

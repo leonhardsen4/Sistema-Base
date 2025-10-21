@@ -4,6 +4,7 @@ import com.sistema.config.DatabaseConfig;
 import com.sistema.model.Nota;
 
 import java.sql.*;
+import java.time.ZoneId;
 import java.util.*;
 
 public class NotaRepository {
@@ -84,10 +85,17 @@ public class NotaRepository {
         n.setStatusId(rs.getLong("status_id"));
         n.setTitulo(rs.getString("titulo"));
         n.setConteudo(rs.getString("conteudo"));
+
+        // SQLite CURRENT_TIMESTAMP retorna UTC, converter para horário de Brasília (UTC-3)
         var tsCriacao = rs.getTimestamp("data_criacao");
-        if (tsCriacao != null) n.setDataCriacao(tsCriacao.toLocalDateTime());
+        if (tsCriacao != null) {
+            n.setDataCriacao(tsCriacao.toLocalDateTime().minusHours(3));
+        }
         var tsAtualizacao = rs.getTimestamp("data_atualizacao");
-        if (tsAtualizacao != null) n.setDataAtualizacao(tsAtualizacao.toLocalDateTime());
+        if (tsAtualizacao != null) {
+            n.setDataAtualizacao(tsAtualizacao.toLocalDateTime().minusHours(3));
+        }
+
         var dtPrazo = rs.getDate("prazo_final");
         if (dtPrazo != null) n.setPrazoFinal(dtPrazo.toLocalDate());
         return n;

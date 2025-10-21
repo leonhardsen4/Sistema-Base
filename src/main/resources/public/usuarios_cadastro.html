@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>➕ Novo Usuário - Sistema</title>
+  <title>Novo Usuário - Sistema</title>
   <link rel="stylesheet" href="/css/layout.css">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f3f4f6;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-light);
       margin: 0;
       padding: 0;
     }
@@ -19,14 +19,15 @@
     }
 
     .form-card {
-      background: white;
+      background: var(--color-bg-sections);
+      border: 1px solid var(--color-border);
       border-radius: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       overflow: hidden;
     }
 
     .form-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-header);
       color: white;
       padding: 30px;
       text-align: center;
@@ -74,7 +75,7 @@
     .form-group label {
       display: block;
       margin-bottom: 8px;
-      color: #374151;
+      color: var(--text-primary);
       font-weight: 600;
       font-size: 14px;
     }
@@ -83,19 +84,26 @@
     .form-group textarea {
       width: 100%;
       padding: 12px 15px;
-      border: 2px solid #e5e7eb;
+      border: 2px solid var(--input-border);
       border-radius: 10px;
       font-size: 15px;
       font-family: inherit;
       transition: all 0.3s ease;
       box-sizing: border-box;
+      background: var(--input-bg);
+      color: var(--input-text);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--input-placeholder);
     }
 
     .form-group input:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
     }
 
     .password-strength {
@@ -140,14 +148,15 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-primary);
       color: white;
       flex: 1;
     }
 
     .btn-primary:hover {
+      background: var(--gradient-primary-hover);
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 25px rgba(153, 23, 60, 0.3);
     }
 
     .btn-primary:disabled {
@@ -159,13 +168,13 @@
 
     .btn-secondary {
       background: white;
-      color: #374151;
-      border: 2px solid #e5e7eb;
+      color: var(--text-secondary);
+      border: 2px solid var(--color-border);
     }
 
     .btn-secondary:hover {
-      background: #f9fafb;
-      border-color: #d1d5db;
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
     }
 
     .input-hint {
@@ -221,6 +230,10 @@
         <h1>🚀 Sistema</h1>
       </div>
       <div class="user-menu">
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-option active" data-theme="light">☼</div>
+          <div class="theme-toggle-option" data-theme="dark">☾</div>
+        </div>
         <div class="user-info">
           <div class="user-name" id="userName">Carregando...</div>
           <div class="user-email" id="userEmail"></div>
@@ -243,7 +256,7 @@
       <div class="form-container">
         <div class="form-card">
           <div class="form-header">
-            <h1>➕ Novo Usuário</h1>
+            <h1>+ Novo Usuário</h1>
             <p>Preencha os dados para cadastrar um novo usuário no sistema</p>
           </div>
 
@@ -512,7 +525,38 @@
       }
     }
 
+    // Toggle de tema
+    function initThemeToggle() {
+      const toggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'light';
+
+      // Aplicar tema salvo
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggleUI(savedTheme);
+
+      // Event listener para toggle
+      toggle.querySelectorAll('.theme-toggle-option').forEach(option => {
+        option.addEventListener('click', () => {
+          const theme = option.dataset.theme;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+          updateThemeToggleUI(theme);
+        });
+      });
+    }
+
+    function updateThemeToggleUI(theme) {
+      document.querySelectorAll('.theme-toggle-option').forEach(option => {
+        if (option.dataset.theme === theme) {
+          option.classList.add('active');
+        } else {
+          option.classList.remove('active');
+        }
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      initThemeToggle();
       verificar();
       carregarUsuario();
     });

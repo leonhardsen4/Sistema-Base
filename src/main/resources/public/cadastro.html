@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #99173C 0%, #c71f4f 50%, #7d1230 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,12 +22,13 @@
         }
 
         .container {
-            background: white;
+            background: #EFFFCD;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
             width: 100%;
             max-width: 450px;
+            border: 2px solid #DCE9BE;
         }
 
         .logo {
@@ -36,9 +37,18 @@
         }
 
         .logo h1 {
-            color: #667eea;
+            color: #99173C;
             font-size: 32px;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo h1::before {
+            content: "◆";
+            font-size: 28px;
         }
 
         .logo p {
@@ -53,7 +63,7 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #374151;
+            color: #2E2633;
             font-weight: 600;
             font-size: 14px;
         }
@@ -61,22 +71,24 @@
         input {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #DCE9BE;
             border-radius: 10px;
             font-size: 15px;
             transition: all 0.3s ease;
+            background: white;
+            color: #2E2633;
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #99173C;
+            box-shadow: 0 0 0 3px rgba(153, 23, 60, 0.1);
         }
 
         .btn {
             width: 100%;
             padding: 14px;
-            background: #667eea;
+            background: linear-gradient(135deg, #99173C 0%, #c71f4f 50%, #99173C 100%);
             color: white;
             border: none;
             border-radius: 10px;
@@ -88,9 +100,9 @@
         }
 
         .btn:hover {
-            background: #5568d3;
+            background: linear-gradient(135deg, #7d1230 0%, #99173C 50%, #7d1230 100%);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(153, 23, 60, 0.3);
         }
 
         .btn:disabled {
@@ -127,13 +139,14 @@
         }
 
         .link a {
-            color: #667eea;
+            color: #99173C;
             text-decoration: none;
             font-weight: 600;
         }
 
         .link a:hover {
             text-decoration: underline;
+            color: #7d1230;
         }
 
         .password-strength {
@@ -174,7 +187,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <h1>✨ Criar Conta</h1>
+            <h1>Criar Conta</h1>
             <p>Preencha os dados abaixo</p>
         </div>
 
