@@ -10,14 +10,29 @@
     <link rel="stylesheet" href="/css/style.css">
     <style>
         /* Estilo de loading específico do cadastro */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+        .btn.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .btn.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -136,9 +151,9 @@
                 return;
             }
 
-            // Desabilitar botão
+            // Desabilitar botão e mostrar loading
             btnCadastrar.disabled = true;
-            btnCadastrar.innerHTML = '<span class="loading"></span>';
+            btnCadastrar.classList.add('loading');
 
             try {
                 const response = await fetch('/api/usuarios', {
@@ -160,13 +175,13 @@
                 } else {
                     mostrarAlerta(data.mensagem, 'error');
                     btnCadastrar.disabled = false;
-                    btnCadastrar.textContent = 'Criar Conta';
+                    btnCadastrar.classList.remove('loading');
                 }
 
             } catch (error) {
                 mostrarAlerta('Erro ao conectar com o servidor', 'error');
                 btnCadastrar.disabled = false;
-                btnCadastrar.textContent = 'Criar Conta';
+                btnCadastrar.classList.remove('loading');
             }
         });
 

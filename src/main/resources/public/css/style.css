@@ -1105,6 +1105,29 @@ tbody tr:hover {
   border: 2px solid var(--color-bg-sections);
   max-height: 95vh;
   overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Melhorar aparência da scrollbar */
+.login-container::-webkit-scrollbar,
+.cadastro-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.login-container::-webkit-scrollbar-track,
+.cadastro-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.login-container::-webkit-scrollbar-thumb,
+.cadastro-container::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.login-container::-webkit-scrollbar-thumb:hover,
+.cadastro-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray);
 }
 
 .logo {
