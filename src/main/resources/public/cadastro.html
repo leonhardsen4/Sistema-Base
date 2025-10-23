@@ -7,171 +7,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/logo.png">
     <link rel="apple-touch-icon" href="/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #99173C 0%, #c71f4f 50%, #7d1230 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: #EFFFCD;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 450px;
-            border: 2px solid #DCE9BE;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            color: #99173C;
-            font-size: 32px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .logo h1::before {
-            content: "◆";
-            font-size: 28px;
-        }
-
-        .logo p {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2E2633;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #DCE9BE;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: white;
-            color: #2E2633;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #99173C;
-            box-shadow: 0 0 0 3px rgba(153, 23, 60, 0.1);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #99173C 0%, #c71f4f 50%, #99173C 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background: linear-gradient(135deg, #7d1230 0%, #99173C 50%, #7d1230 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(153, 23, 60, 0.3);
-        }
-
-        .btn:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .alert {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .alert.error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .alert.success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .link a {
-            color: #99173C;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-            color: #7d1230;
-        }
-
-        .password-strength {
-            margin-top: 8px;
-            height: 4px;
-            background: #e5e7eb;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            transition: all 0.3s ease;
-            width: 0;
-        }
-
-        .password-strength-text {
-            font-size: 12px;
-            margin-top: 5px;
-            color: #6b7280;
-        }
-
+        /* Estilo de loading específico do cadastro */
         .loading {
             display: inline-block;
             width: 20px;
@@ -181,14 +19,10 @@
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
-<body>
-    <div class="container">
+<body style="background: var(--gradient-login-bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
+    <div class="cadastro-container">
         <div class="logo">
             <h1>Criar Conta</h1>
             <p>Preencha os dados abaixo</p>
