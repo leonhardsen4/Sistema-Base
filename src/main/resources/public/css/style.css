@@ -1119,14 +1119,17 @@ tbody tr:hover {
   gap: 10px;
 }
 
-.logo h1::before {
-  content: "◆";
-  font-size: 28px;
-}
-
 .logo p {
   color: #6b7280;
   font-size: 14px;
+}
+
+.login-container .btn,
+.cadastro-container .btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 .divider {
